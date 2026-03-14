@@ -32,6 +32,7 @@ size.parse('2.5GB');             // 2684354560
 - 🧮 **High Precision** — Optional `decimal.js` integration for arbitrary precision
 - 📦 **TypeScript First** — Full type safety
 - 🪶 **Lightweight** — Core functionality with minimal footprint
+- ✅ **Well Tested** — Comprehensive test suite with 100% coverage
 
 ## Install
 
@@ -115,7 +116,7 @@ Formats a number to the optimal unit string.
 ```ts
 const size = new SmartUnit(['B', 'KB', 'MB'], { baseDigit: 1024, fractionDigits: 2 });
 
-size.format(1536);           // => "1.5KB"
+size.format(1536);           // => "1.50KB"
 size.format(1536, 0);        // => "2KB"
 size.format(1536, '1-3');    // => "1.5KB" (min 1, max 3 decimals)
 ```
@@ -212,6 +213,14 @@ const currency = new SmartUnit(['', 'K', 'M', 'B', 'T'], {
 });
 
 currency.format('12345678901234567890');  // => "12345678.90T"
+```
+
+## Testing
+
+Run the test suite:
+
+```bash
+npm test
 ```
 
 ## TypeScript

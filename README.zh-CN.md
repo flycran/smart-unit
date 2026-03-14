@@ -32,6 +32,7 @@ size.parse('2.5GB');             // 2684354560
 - 🧮 **高精度** — 可选 `decimal.js` 集成，支持任意精度计算
 - 📦 **TypeScript 优先** — 完整的类型安全
 - 🪶 **轻量级** — 核心功能，体积小巧
+- ✅ **测试完善** — 全面的测试套件，100% 覆盖率
 
 ## 安装
 
@@ -115,7 +116,7 @@ time.parse('2.5h');  // => 9000000 (ms)
 ```ts
 const size = new SmartUnit(['B', 'KB', 'MB'], { baseDigit: 1024, fractionDigits: 2 });
 
-size.format(1536);           // => "1.5KB"
+size.format(1536);           // => "1.50KB"
 size.format(1536, 0);        // => "2KB"
 size.format(1536, '1-3');    // => "1.5KB"（最少1位，最多3位小数）
 ```
@@ -212,6 +213,14 @@ const currency = new SmartUnit(['', 'K', 'M', 'B', 'T'], {
 });
 
 currency.format('12345678901234567890');  // => "12345678.90T"
+```
+
+## 测试
+
+运行测试套件：
+
+```bash
+npm test
 ```
 
 ## TypeScript
