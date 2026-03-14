@@ -102,7 +102,7 @@ Creates a unit converter instance.
 Formats a number to the optimal unit string.
 
 ```ts
-const size = new SmartUnit(['B', 'KB', 1024, 'MB'], { fractionDigits: 2 });
+const size = new SmartUnit(['B', 'KB', 'MB'], { baseDigit: 1024, fractionDigits: 2 });
 
 size.format(1536);           // => "1.5KB"
 size.format(1536, 0);        // => "2KB"
@@ -114,7 +114,7 @@ size.format(1536, '1-3');    // => "1.5KB" (min 1, max 3 decimals)
 Parses a unit string back to base unit value.
 
 ```ts
-const size = new SmartUnit(['B', 'KB', 1024, 'MB']);
+const size = new SmartUnit(['B', 'KB', 'MB'], { baseDigit: 1024 });
 
 size.parse('1.5KB');  // => 1536
 size.parse('2MB');    // => 2097152
@@ -125,7 +125,7 @@ size.parse('2MB');    // => 2097152
 Gets the optimal unit and converted value without formatting.
 
 ```ts
-const size = new SmartUnit(['B', 'KB', 1024, 'MB']);
+const size = new SmartUnit(['B', 'KB', 'MB'], { baseDigit: 1024 });
 
 size.getUnit(1536);
 // => { num: 1.5, unit: 'KB' }
@@ -152,7 +152,7 @@ length.toBase(100, 'cm');  // => 1000 (mm)
 Extracts numeric value and unit from a formatted string.
 
 ```ts
-const size = new SmartUnit(['B', 'KB', 1024, 'MB']);
+const size = new SmartUnit(['B', 'KB', 'MB'], { baseDigit: 1024 });
 
 size.splitUnit('1.5KB');  // => { num: 1.5, unit: 'KB' }
 ```
@@ -188,7 +188,7 @@ const freq = new SmartUnit(['Hz', 'kHz', 'MHz', 'GHz'], {
   fractionDigits: 2,
 });
 
-freq.format(2400000000);  // => "2.4GHz"
+freq.format(2400000000);  // => "2.40GHz"
 ```
 
 ### Financial Amounts (High Precision)

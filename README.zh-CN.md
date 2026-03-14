@@ -102,7 +102,7 @@ time.parse('2.5h');  // => 9000000 (ms)
 将数字格式化为最优单位字符串。
 
 ```ts
-const size = new SmartUnit(['B', 'KB', 1024, 'MB'], { fractionDigits: 2 });
+const size = new SmartUnit(['B', 'KB', 'MB'], { baseDigit: 1024, fractionDigits: 2 });
 
 size.format(1536);           // => "1.5KB"
 size.format(1536, 0);        // => "2KB"
@@ -114,7 +114,7 @@ size.format(1536, '1-3');    // => "1.5KB"（最少1位，最多3位小数）
 将单位字符串解析回基本单位值。
 
 ```ts
-const size = new SmartUnit(['B', 'KB', 1024, 'MB']);
+const size = new SmartUnit(['B', 'KB', 'MB'], { baseDigit: 1024 });
 
 size.parse('1.5KB');  // => 1536
 size.parse('2MB');    // => 2097152
@@ -125,7 +125,7 @@ size.parse('2MB');    // => 2097152
 获取最优单位和转换后的值（不进行格式化）。
 
 ```ts
-const size = new SmartUnit(['B', 'KB', 1024, 'MB']);
+const size = new SmartUnit(['B', 'KB', 'MB'], { baseDigit: 1024 });
 
 size.getUnit(1536);
 // => { num: 1.5, unit: 'KB' }
@@ -152,7 +152,7 @@ length.toBase(100, 'cm');  // => 1000 (mm)
 从格式化字符串中提取数值和单位。
 
 ```ts
-const size = new SmartUnit(['B', 'KB', 1024, 'MB']);
+const size = new SmartUnit(['B', 'KB', 'MB'], { baseDigit: 1024 });
 
 size.splitUnit('1.5KB');  // => { num: 1.5, unit: 'KB' }
 ```
@@ -188,7 +188,7 @@ const freq = new SmartUnit(['Hz', 'kHz', 'MHz', 'GHz'], {
   fractionDigits: 2,
 });
 
-freq.format(2400000000);  // => "2.4GHz"
+freq.format(2400000000);  // => "2.40GHz"
 ```
 
 ### 金融金额（高精度）
