@@ -1,9 +1,16 @@
 {
   "name": "smart-unit",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Elegant unit conversion utility with automatic unit selection and high-precision support",
   "main": "dist/index.js",
   "module": "dist/index.esm.js",
+  "exports": {
+    ".": {
+      "import": "./dist/index.esm.js",
+      "require": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    }
+  },
   "types": "dist/index.d.ts",
   "repository": {
     "type": "git",

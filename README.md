@@ -200,7 +200,7 @@ const currency = new SmartUnit(['', 'K', 'M', 'B', 'T'], {
   fractionDigits: 2,
 });
 
-currency.format('12345678901234567890');  // => "12345678.9T"
+currency.format('12345678901234567890');  // => "12345678.90T"
 ```
 
 ## TypeScript
