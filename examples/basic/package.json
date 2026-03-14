@@ -1,0 +1,12 @@
+{
+  "name": "smart-unit-basic-example",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "dependencies": {
+    "smart-unit": "latest"
+  }
+}

@@ -7,37 +7,37 @@ import { terser } from 'rollup-plugin-terser'
 export default defineConfig([
   {
     input: './src/index.ts',
-    plugins: [ resolve(), commonjs(), typescript({
+    plugins: [resolve(), commonjs(), typescript({
       tsconfig: './tsconfig.build.json',
-    }) ],
+    })],
     output: {
       file: './dist/index.js',
       format: 'cjs',
     },
-    external: [ 'decimal.js' ],
+    external: ['decimal.js'],
   },
   {
     input: './src/index.ts',
-    plugins: [ resolve(), commonjs(), typescript({
+    plugins: [resolve(), commonjs(), typescript({
       tsconfig: './tsconfig.build.json',
-    }) ],
+    })],
     output: {
       file: './dist/index.esm.js',
       format: 'esm',
     },
-    external: [ 'decimal.js' ],
+    external: ['decimal.js'],
   },
   {
     input: './src/index.ts',
-    plugins: [ terser(), resolve({
+    plugins: [terser(), resolve({
       browser: true,
     }), commonjs(), typescript({
       tsconfig: './tsconfig.build.json',
-    }) ],
+    })],
     output: {
       file: './dist/browser.umd.js',
       format: 'umd',
-      name: 'AutoUnit',
+      name: 'SmartUnit',
       exports: 'named',
     },
   },

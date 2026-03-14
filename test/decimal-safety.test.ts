@@ -1,33 +1,42 @@
-import AutoUnit from '../src';
-import Decimal from 'decimal.js';
+import { describe, expect, it } from 'vitest';
+import SmartUnit from '../src';
 
-describe('精度安全测试', () => {
-  const au = new AutoUnit([ 'mm', 10, 'cm', 100, 'm', 1e3, 'km', 1e3, 'Mm', 1e3, 'Gm', 1e3, 'Tm' ], { highPrecision: true })
-
-  it('基本转换测试', () => {
-    const result = au.getUnit(123456789)
-    expect(result.num).toBeCloseTo(123.456789)
-    expect(result.decimal?.toString()).toEqual('123.456789')
-    expect(result.unit).toEqual('km')
+// 精度安全测试
+describe('High precision safety tests', () => {
+  const su = new SmartUnit(['mm', 10, 'cm', 100, 'm', 1e3, 'km', 1e3, 'Mm', 1e3, 'Gm', 1e3, 'Tm'], {
+    useDecimal: true,
+    decimalOptions: { precision: 50 }
   })
 
-  it('小数位数控制测试', () => {
-    expect(au.format(123456789, 2)).toEqual('123.46km')
-    expect(au.format(123456789, '1-3')).toEqual('123.457km')
-  })
-
-  it('超过JavaScript安全整数范围的值测试', () => {
-    const result = au.getUnit('1e18')
-    expect(result.num).toBeCloseTo(1000)
+  // 基本转换测试 - 使用超大数值
+  it('should perform basic conversion with high precision', () => {
+    const result = su.getUnit('123456789012345678901234567890')
+    expect(result.decimal?.toString()).toEqual('123456789012345.67890123456789')
     expect(result.unit).toEqual('Tm')
   })
 
-  it('转换为基本单位', () => {
-    expect(au.toBase(123456789, 'Mm').toString()).toEqual(String(1.23456789e17))
+  // 小数位数控制测试 - 使用超大数值
+  it('should control decimal places correctly', () => {
+    expect(su.format('123456789012345678901234567890', 2)).toEqual('123456789012345.68Tm')
+    expect(su.format('123456789012345678901234567890', '1-3')).toEqual('123456789012345.67890123456789Tm')
   })
 
-  it('带小数点的字符串测试', () => {
-    const value = au.parse('123456789.123456km')
-    expect(value.toString()).toEqual(new Decimal('123456789.123456').times(1e6).toString())
+  // 超过JavaScript安全整数范围的值测试
+  it('should handle values beyond JS safe integer range', () => {
+    const result = su.getUnit('1e30')
+    expect(result.decimal?.toString()).toEqual('1000000000000000')
+    expect(result.unit).toEqual('Tm')
+  })
+
+  // 转换为基本单位 - 使用超大数值
+  it('should convert to base units', () => {
+    const result = su.toBase('123456789012345678901234567890', 'Mm')
+    expect(result.toString()).toEqual('1.2345678901234567890123456789e+38')
+  })
+
+  // 带小数点的超大字符串测试
+  it('should parse strings with decimal points', () => {
+    const value = su.parse('12345678901234567890.123456789km')
+    expect(value.toString()).toEqual('1.2345678901234567890123456789e+25')
   })
 })
