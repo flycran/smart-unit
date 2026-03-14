@@ -5,6 +5,7 @@
 [![npm version](https://img.shields.io/npm/v/smart-unit)](https://www.npmjs.com/package/smart-unit)
 [![npm downloads](https://img.shields.io/npm/dm/smart-unit)](https://www.npmjs.com/package/smart-unit)
 [![bundle size](https://img.shields.io/bundlephobia/minzip/smart-unit)](https://bundlephobia.com/package/smart-unit)
+[![test](https://github.com/flycran/smart-unit/workflows/Test/badge.svg)](https://github.com/flycran/smart-unit/actions)
 [![license](https://img.shields.io/npm/l/smart-unit)](./LICENSE)
 
 [English](./README.md) | 中文
@@ -12,6 +13,16 @@
 ---
 
 **smart-unit** 是一个轻量级的自动单位转换工具，支持智能格式化输出。
+
+```ts
+import SmartUnit from 'smart-unit';
+
+const size = new SmartUnit(['B', 'KB', 'MB', 'GB'], { baseDigit: 1024 });
+
+size.format(1024 * 1024 * 100);  // "100MB"
+size.format(1536);               // "1.5KB"
+size.parse('2.5GB');             // 2684354560
+```
 
 ## 特性
 
