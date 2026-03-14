@@ -1,12 +1,18 @@
 {
   "name": "smart-unit",
-  "version": "1.0.0",
-  "description": "",
+  "version": "1.0.1",
+  "description": "Elegant unit conversion utility with automatic unit selection and high-precision support",
   "main": "dist/index.js",
   "module": "dist/index.esm.js",
   "types": "dist/index.d.ts",
-  "repository": "https://github.com/flycran/smart-unit.git",
-  "homepage": "https://github.com/flycran/smart-unit",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/flycran/smart-unit.git"
+  },
+  "homepage": "https://github.com/flycran/smart-unit#readme",
+  "bugs": {
+    "url": "https://github.com/flycran/smart-unit/issues"
+  },
   "devDependencies": {
     "@biomejs/biome": "2.4.7",
     "@rollup/plugin-commonjs": "^28.0.3",
@@ -31,9 +37,17 @@
     "test:watch": "vitest"
   },
   "keywords": [
-    "Automatically select the appropriate unit of measurement"
+    "unit",
+    "unit-conversion",
+    "formatter",
+    "filesize",
+    "bytes",
+    "precision",
+    "decimal",
+    "bigint",
+    "typescript"
   ],
-  "author": "Flycran",
+  "author": "flycran",
   "license": "MIT",
   "dependencies": {
     "decimal.js": "^10.5.0"
