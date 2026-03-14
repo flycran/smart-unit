@@ -28,6 +28,10 @@
 npm install smart-unit
 ```
 
+## 在线体验
+
+[![在 CodeSandbox 中编辑](https://codesandbox.io/static/img/play-codesandbox.svg)](https://codesandbox.io/s/github/flycran/smart-unit/tree/master/examples/basic)
+
 ## 快速开始
 
 ### 文件大小格式化
