@@ -66,9 +66,9 @@ export const ERROR_HIGH_PRECISION_NOT_ENABLED = 'By default, only number input i
 export class SmartUnit<HP extends boolean = false> {
   static ignoreNaNInputs = false
   readonly threshold: number
-  readonly decimal?: FractionDigits
+  readonly fractionDigits?: FractionDigits
   readonly unitsStr: string[] = []
-  readonly highPrecision: HP
+  readonly useDecimal: HP
   private DecimalClass: typeof DecimalConstructor = DecimalConstructor
 
   constructor(
@@ -77,8 +77,8 @@ export class SmartUnit<HP extends boolean = false> {
   ) {
     if (!units.length) throw new Error('units is empty.')
     this.threshold = option.threshold || 1
-    this.decimal = option.fractionDigits
-    this.highPrecision = option.useDecimal
+    this.fractionDigits = option.fractionDigits
+    this.useDecimal = option.useDecimal
     if (option.decimalOptions) {
       this.DecimalClass = DecimalConstructor.clone(option.decimalOptions)
     }
@@ -108,7 +108,7 @@ export class SmartUnit<HP extends boolean = false> {
     if (!SmartUnit.ignoreNaNInputs && Number.isNaN(num)) throw new Error(ERROR_NAN_INPUT)
     let i = 1
 
-    if (this.highPrecision) {
+    if (this.useDecimal) {
       const dn = new this.DecimalClass(typeof num === 'bigint' ? num.toString() : num)
       const isNegative = dn.isNegative()
       let absDn = isNegative ? dn.abs() : dn
@@ -152,23 +152,23 @@ export class SmartUnit<HP extends boolean = false> {
    * Formats a number as a string with optional decimal place configuration
    *
    * @param num - The number to convert to string
-   * @param decimal - Decimal precision configuration (defaults to instance setting)
+   * @param fractionDigits - Decimal precision configuration (defaults to instance setting)
    *   - If a number, defines fixed decimal places
    *   - If a string in "min-max" format, defines a range of decimal places
    *   - If omitted, uses the instance's default decimal configuration
    * @returns The formatted string representation with unit
    */
-  format(num: Num<HP>, decimal: FractionDigits = this.decimal): string {
+  format(num: Num<HP>, fractionDigits: FractionDigits = this.fractionDigits): string {
     const {
       num: n,
       unit,
       decimal: dec,
     } = this.getUnit(num)
     let ns: string
-    if (typeof decimal === 'number') {
-      ns = (dec ?? n).toFixed(decimal)
-    } else if (typeof decimal === 'string') {
-      const [dp1, dp2] = decimal
+    if (typeof fractionDigits === 'number') {
+      ns = (dec ?? n).toFixed(fractionDigits)
+    } else if (typeof fractionDigits === 'string') {
+      const [dp1, dp2] = fractionDigits
         .split('-')
       const ndp = (n.toString().split('.')[1] || '').length
 
@@ -201,7 +201,7 @@ export class SmartUnit<HP extends boolean = false> {
     if (!SmartUnit.ignoreNaNInputs && Number.isNaN(num)) throw new Error(ERROR_NAN_INPUT)
     let i = 0
 
-    if (this.highPrecision) {
+    if (this.useDecimal) {
       // High-precision calculation
       let dn = new this.DecimalClass(typeof num === 'bigint' ? num.toString() : num)
       while (i < this.units.length) {
@@ -256,7 +256,7 @@ export class SmartUnit<HP extends boolean = false> {
     return {
       num: +num,
       unit,
-      decimal: this.highPrecision ? new this.DecimalClass(num) : undefined,
+      decimal: this.useDecimal ? new this.DecimalClass(num) : undefined,
     }
   }
 
@@ -283,12 +283,12 @@ export class SmartUnit<HP extends boolean = false> {
    *
    * @param num - The number to convert
    * @param unit - The original unit
-   * @param decimal - Optional decimal places for formatting output
+   * @param fractionDigits - Optional decimal places for formatting output
    * @returns The converted number as a formatted string
    */
-  fromUnitFormat(num: Num<HP>, unit: string, decimal?: FractionDigits): string {
+  fromUnitFormat(num: Num<HP>, unit: string, fractionDigits?: FractionDigits): string {
     const nnum = this.toBase(num, unit)
-    return this.format(nnum, decimal)
+    return this.format(nnum, fractionDigits)
   }
 }
 
