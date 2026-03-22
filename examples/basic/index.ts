@@ -50,3 +50,7 @@ const currency = new SmartUnit(['', 'K', 'M', 'B', 'T'], {
 
 console.log('\n=== Financial Examples ===');
 console.log(currency.format('12345678901234567890')); // 12345678.90T
+
+console.log('\n=== i18n Examples ===');
+import('./i18n.ts')
+

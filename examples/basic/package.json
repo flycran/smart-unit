@@ -4,9 +4,14 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "start": "node index.js"
+    "start": "tsx index.ts",
+    "start:i18n": "tsx i18n.ts"
   },
   "dependencies": {
     "smart-unit": "latest"
+  },
+  "devDependencies": {
+    "tsx": "^4.21.0",
+    "typescript": "^5.9.3"
   }
 }
