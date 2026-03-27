@@ -1,11 +1,11 @@
-import { describe, expect, it } from 'vitest';
-import SmartUnit from '../src';
+import { describe, expect, it } from 'vitest'
+import SmartUnit from '../src'
 
 // 精度安全测试
 describe('High precision safety tests', () => {
   const su = new SmartUnit(['mm', 10, 'cm', 100, 'm', 1e3, 'km', 1e3, 'Mm', 1e3, 'Gm', 1e3, 'Tm'], {
     useDecimal: true,
-    decimalOptions: { precision: 50 }
+    decimalOptions: { precision: 50 },
   })
 
   // 基本转换测试 - 使用超大数值
@@ -18,7 +18,7 @@ describe('High precision safety tests', () => {
   // 小数位数控制测试 - 使用超大数值
   it('should control decimal places correctly', () => {
     expect(su.format('123456789012345678901234567890', 2)).toEqual('123456789012345.68Tm')
-    expect(su.format('123456789012345678901234567890', '1-3')).toEqual('123456789012345.67890123456789Tm')
+    expect(su.format('123456789012345678901234567890', '1-3')).toEqual('123456789012345.679Tm')
   })
 
   // 超过JavaScript安全整数范围的值测试

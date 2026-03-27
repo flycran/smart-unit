@@ -1,5 +1,5 @@
-import { describe, expect, it } from 'vitest';
-import SmartUnit from '../src';
+import { describe, expect, it } from 'vitest'
+import SmartUnit from '../src'
 
 // 自定义进位测试 距离单位
 describe('Custom base conversion - distance units', () => {
@@ -74,6 +74,7 @@ describe('Decimal formatting tests', () => {
   it('getUnit', () => {
     expect(su.getUnit(1024 * 1024 * 1000)).toEqual({
       num: 1000,
+      numStr: '1000',
       unit: 'MB',
     })
   })

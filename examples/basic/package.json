@@ -1,17 +1,17 @@
 {
   "name": "smart-unit-example",
   "version": "1.0.0",
+  "devDependencies": {
+    "tsx": "^4.21.0",
+    "typescript": "^5.9.3"
+  },
   "private": true,
-  "type": "module",
   "scripts": {
     "start": "tsx index.ts",
     "start:i18n": "tsx i18n.ts"
   },
+  "type": "module",
   "dependencies": {
-    "smart-unit": "latest"
-  },
-  "devDependencies": {
-    "tsx": "^4.21.0",
-    "typescript": "^5.9.3"
+    "smart-unit": "../.."
   }
 }

@@ -1,14 +1,25 @@
 {
   "name": "smart-unit",
-  "version": "1.0.5",
+  "version": "2.0.0",
   "description": "Elegant unit conversion utility with automatic unit selection and high-precision support",
-  "main": "dist/index.js",
-  "module": "dist/index.esm.js",
+  "main": "dist/index.cjs",
+  "scripts": {
+    "build": "rollup -c --configPlugin typescript",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "format": "biome format --fix ."
+  },
+  "module": "dist/index.mjs",
   "exports": {
     ".": {
-      "import": "./dist/index.esm.js",
-      "require": "./dist/index.js",
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.cjs",
       "types": "./dist/index.d.ts"
+    },
+    "./react": {
+      "import": "./dist/react.mjs",
+      "require": "./dist/react.cjs",
+      "types": "./dist/react.d.ts"
     }
   },
   "types": "dist/index.d.ts",
@@ -19,6 +30,9 @@
   "homepage": "https://github.com/flycran/smart-unit#readme",
   "bugs": {
     "url": "https://github.com/flycran/smart-unit/issues"
+  },
+  "dependencies": {
+    "decimal.js": "^10.5.0"
   },
   "devDependencies": {
     "@biomejs/biome": "2.4.7",
@@ -38,11 +52,6 @@
     "README.md",
     "README.zh-CN.md"
   ],
-  "scripts": {
-    "build": "rollup -c --configPlugin typescript",
-    "test": "vitest run",
-    "test:watch": "vitest"
-  },
   "keywords": [
     "unit",
     "unit-conversion",
@@ -55,8 +64,5 @@
     "typescript"
   ],
   "author": "flycran",
-  "license": "MIT",
-  "dependencies": {
-    "decimal.js": "^10.5.0"
-  }
+  "license": "MIT"
 }

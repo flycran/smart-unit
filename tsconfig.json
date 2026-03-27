@@ -11,9 +11,7 @@
     "skipLibCheck": true,
     "strictNullChecks": false,
     "noImplicitAny": false,
-    "forceConsistentCasingInFileNames": false,
+    "forceConsistentCasingInFileNames": false
   },
-  "include": [
-    "src/**/*"
-  ]
+  "include": ["src/**/*"]
 }

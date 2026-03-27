@@ -4,36 +4,64 @@ import typescript from '@rollup/plugin-typescript'
 import { defineConfig } from 'rollup'
 import { terser } from 'rollup-plugin-terser'
 
-export default defineConfig([
-  {
-    input: './src/index.ts',
-    plugins: [resolve(), commonjs(), typescript({
+const baseConfig = defineConfig({
+  plugins: [
+    resolve(),
+    commonjs(),
+    typescript({
       tsconfig: './tsconfig.build.json',
-    })],
+    }),
+  ],
+  external: ['decimal.js'],
+})
+
+export default defineConfig([
+  // entry
+  {
+    ...baseConfig,
+    input: './src/index.ts',
     output: {
-      file: './dist/index.js',
+      file: './dist/index.cjs',
       format: 'cjs',
     },
-    external: ['decimal.js'],
   },
   {
+    ...baseConfig,
     input: './src/index.ts',
-    plugins: [resolve(), commonjs(), typescript({
-      tsconfig: './tsconfig.build.json',
-    })],
     output: {
-      file: './dist/index.esm.js',
+      file: './dist/index.mjs',
       format: 'esm',
     },
-    external: ['decimal.js'],
+  },
+  // react
+  {
+    ...baseConfig,
+    input: './src/react.ts',
+    output: {
+      file: './dist/react.cjs',
+      format: 'cjs',
+    },
+  },
+  {
+    ...baseConfig,
+    input: './src/react.ts',
+    output: {
+      file: './dist/react.mjs',
+      format: 'esm',
+    },
   },
   {
     input: './src/index.ts',
-    plugins: [terser(), resolve({
-      browser: true,
-    }), commonjs(), typescript({
-      tsconfig: './tsconfig.build.json',
-    })],
+    plugins: [
+      terser(),
+      resolve({
+        browser: true,
+      }),
+      commonjs(),
+      typescript({
+        tsconfig: './tsconfig.build.json',
+      }),
+    ],
     output: {
       file: './dist/browser.umd.js',
       format: 'umd',

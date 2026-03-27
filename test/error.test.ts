@@ -1,4 +1,4 @@
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it } from 'vitest'
 import SmartUnit, { ERROR_HIGH_PRECISION_NOT_ENABLED, ERROR_NAN_INPUT } from '../src'
 
 describe('Error handling tests', () => {
