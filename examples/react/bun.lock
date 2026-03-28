@@ -5,11 +5,11 @@
     "": {
       "name": "react",
       "dependencies": {
+        "smart-unit": "../../smart-unit-latest.tgz",
         "i18next": "^25.10.4",
         "react": "^19.2.0",
         "react-dom": "^19.2.0",
         "react-i18next": "^16.6.1",
-        "smart-unit": "^1.0.5",
       },
       "devDependencies": {
         "@types/node": "^24.10.1",
@@ -348,7 +348,7 @@
 
     "shebang-regex": ["shebang-regex@3.0.0", "https://registry.npmmirror.com/shebang-regex/-/shebang-regex-3.0.0.tgz", {}, "sha512-7++dFhtcx3353uBaq8DDR4NuxBetBzC7ZQOhmTQInHEd6bSrXdiEyzCvG07Z44UYdLShWUyXt5M/yhz8ekcb1A=="],
 
-    "smart-unit": ["smart-unit@1.0.5", "https://registry.npmmirror.com/smart-unit/-/smart-unit-1.0.5.tgz", { "dependencies": { "decimal.js": "^10.5.0" } }, "sha512-QrT1EEaSh3Zpq6BGxKXuzkUG1O2StMYZBWAdLHohHbT4S3MO6+NT+iBElqSoRGHlruL1qSlIn/VLHhLSS8FPrQ=="],
+    "smart-unit": ["smart-unit@../../smart-unit-latest.tgz", { "dependencies": { "decimal.js": "^10.5.0" } }],
 
     "source-map-js": ["source-map-js@1.2.1", "https://registry.npmmirror.com/source-map-js/-/source-map-js-1.2.1.tgz", {}, "sha512-UXWMKhLOwVKb728IUtQPXxfYU+usdybtUrK/8uGE8CQMvrhOpwvzDBwj0QhSL7MQc7vIsISBG8VQ8+IDQxpfQA=="],
 

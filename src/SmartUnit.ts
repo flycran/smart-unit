@@ -9,7 +9,8 @@ export type FractionDigits =
 
 export type DecimalOptions = Decimal.Config
 
-export type PickUnit<U extends string | number> = Exclude<U, number>
+export type GetUnitNames<SU extends SmartUnit<any, any>> =
+  SU extends SmartUnit<any, infer U> ? U : never
 
 export interface SmartUnitOptions<HP extends boolean> {
   // 进制位数
@@ -39,15 +40,17 @@ export interface SmartUnitOptions<HP extends boolean> {
    * - Used to customize precision and other parameters
    */
   decimalOptions?: DecimalOptions
+  /**
+   * The separator for chain formatting
+   * - Default is an empty string
+   */
+  separator?: string
 }
 
-export interface FormattedValue<U extends string> {
+interface FormattedValueBase<U extends string> {
   // 数值
   /** The numeric value */
   num: number
-  // Decimal 高精度数值
-  /** The Decimal instance for high-precision mode */
-  decimal?: Decimal
   // 单位
   /** The unit string */
   unit: U
@@ -55,6 +58,14 @@ export interface FormattedValue<U extends string> {
   /** The number string with decimal places applied */
   numStr?: string
 }
+
+interface FormattedValueUseDecimal<D extends boolean, U extends string> extends FormattedValueBase<U> {
+  // Decimal 高精度数值
+  /** The Decimal instance for high-precision mode */
+  decimal: D extends true ? Decimal : undefined
+}
+
+export type FormattedValue<D extends boolean, U extends string>  = D extends true ? FormattedValueUseDecimal<D, U> : FormattedValueBase<U>
 
 export type Num<D extends boolean = false> = D extends true
   ? number | bigint | string | Decimal
@@ -66,11 +77,12 @@ export const ERROR_NAN_INPUT =
 export const ERROR_HIGH_PRECISION_NOT_ENABLED =
   'By default, only number input is supported. To enable high-precision calculations, explicitly set the decimalSafety parameter to true.'
 
-export class SmartUnit<D extends boolean = false, U extends string | number = string> {
+export class SmartUnit<D extends boolean = false, U extends string = string> {
   static ignoreNaNInputs = false
   readonly threshold: number
+  readonly separator: string
   readonly fractionDigits?: FractionDigits
-  readonly unitNames: PickUnit<U>[] = []
+  readonly unitNames: U[] = []
   readonly unitDigits: number[] = []
   readonly useDecimal: D
   _accumulatedDigits?: number[]
@@ -78,32 +90,33 @@ export class SmartUnit<D extends boolean = false, U extends string | number = st
     if (!this._accumulatedDigits) this.createAccumulatedDigits()
     return this._accumulatedDigits
   }
-  _sortedUnitNames?: PickUnit<U>[]
+  _sortedUnitNames?: U[]
   get sortedUnitNames() {
     if (!this._sortedUnitNames) this.createSortedUnitNames()
     return this._sortedUnitNames
   }
-  public convert?: (str: PickUnit<U>) => string
+  public convert?: (str: U) => string
   private DecimalClass: typeof DecimalConstructor = DecimalConstructor
 
-  constructor(units: U[], option: SmartUnitOptions<D> = {}) {
+  constructor(units: (U | number)[], option: SmartUnitOptions<D> = {}) {
     // Initialize
     if (!units.length) throw new Error('units is empty.')
     this.threshold = option.threshold || 1
     this.fractionDigits = option.fractionDigits
     this.useDecimal = option.useDecimal
+    this.separator = option.separator || ''
     if (option.decimalOptions) {
       this.DecimalClass = DecimalConstructor.clone(option.decimalOptions)
     }
     if (option.baseDigit) {
       for (let i = 0; i < units.length; i++) {
-        const name = units[i] as PickUnit<U>
+        const name = units[i] as U
         if (typeof name !== 'string')
           throw new Error(
             `The unit setting is incorrect; the element at index [${i}] should be of string type.`,
           )
       }
-      this.unitNames = units as PickUnit<U>[]
+      this.unitNames = units as U[]
       this.unitDigits = Array(units.length - 1).fill(option.baseDigit)
     } else {
       for (let i = 1; i < units.length; i += 2) {
@@ -113,19 +126,19 @@ export class SmartUnit<D extends boolean = false, U extends string | number = st
             `The unit setting is incorrect; the element at index [${i}] should be of numeric type.`,
           )
         this.unitDigits.push(units[i] as number)
-        const name = units[i - 1] as PickUnit<U>
+        const name = units[i - 1] as U
         if (typeof name !== 'string')
           throw new Error(
             `The unit setting is incorrect; the element at index [${i - 1}] should be of string type.`,
           )
         this.unitNames.push(name)
       }
-      this.unitNames.push(units[units.length - 1] as PickUnit<U>)
+      this.unitNames.push(units[units.length - 1] as U)
     }
     // create accumulatedDigits
   }
 
-  withConvert(convert: (str: PickUnit<U>) => string) {
+  withConvert(convert: (str: U) => string) {
     const su: SmartUnit<D, U> = Object.create(this)
     su.convert = convert
     return su
@@ -157,7 +170,7 @@ export class SmartUnit<D extends boolean = false, U extends string | number = st
    * @param num - The input number to determine the unit for
    * @returns An object containing the adjusted number, its corresponding unit, and the formatted number string
    */
-  getUnit(num: Num<D>): FormattedValue<PickUnit<U>> {
+  getUnit(num: Num<D>): FormattedValue<D, U> {
     if (!SmartUnit.ignoreNaNInputs && Number.isNaN(num)) throw new Error(ERROR_NAN_INPUT)
     const unitDigitsLen = this.unitDigits.length
 
@@ -179,9 +192,9 @@ export class SmartUnit<D extends boolean = false, U extends string | number = st
       return {
         num: n,
         decimal: result,
-        unit: this.unitNames[i] as PickUnit<U>,
+        unit: this.unitNames[i],
         numStr: this.formatNumber(result, this.fractionDigits),
-      }
+      } as FormattedValue<D, U>
     } else {
       if (typeof num !== 'number') throw new Error(ERROR_HIGH_PRECISION_NOT_ENABLED)
       const isNegative = num < 0
@@ -198,9 +211,9 @@ export class SmartUnit<D extends boolean = false, U extends string | number = st
       const result = isNegative ? -absNum : absNum
       return {
         num: result,
-        unit: this.unitNames[i] as PickUnit<U>,
+        unit: this.unitNames[i],
         numStr: this.formatNumber(result, this.fractionDigits),
-      }
+      } as FormattedValue<D, U>
     }
   }
 
@@ -266,10 +279,10 @@ export class SmartUnit<D extends boolean = false, U extends string | number = st
    * @param num - The input number to determine the chain for
    * @returns An array of FormattedValue objects representing the chain of units
    */
-  getChainUnit(num: Num<D>): FormattedValue<PickUnit<U>>[] {
+  getChainUnit(num: Num<D>): FormattedValue<U>[] {
     if (!SmartUnit.ignoreNaNInputs && Number.isNaN(num)) throw new Error(ERROR_NAN_INPUT)
 
-    const result: FormattedValue<PickUnit<U>>[] = []
+    const result: FormattedValue<U>[] = []
 
     if (this.useDecimal) {
       if (num === 0) {
@@ -347,7 +360,7 @@ export class SmartUnit<D extends boolean = false, U extends string | number = st
    * @param num - The input number to format
    * @returns The formatted chain string (e.g. "1m3s")
    */
-  formatChain(num: Num<D>, separator = ''): string {
+  formatChain(num: Num<D>, separator = this.separator): string {
     const chain = this.getChainUnit(num)
     return chain
       .map(({ numStr, unit }) => `${numStr}${this.convert ? this.convert(unit) : unit}`)
@@ -363,7 +376,7 @@ export class SmartUnit<D extends boolean = false, U extends string | number = st
    * @returns The converted value in base unit
    *   - Returns Decimal if high-precision mode is enabled
    */
-  toBase(num: Num<D>, unit: PickUnit<U>): D extends true ? Decimal : number {
+  toBase(num: Num<D>, unit: U): D extends true ? Decimal : number {
     if (!SmartUnit.ignoreNaNInputs && Number.isNaN(num)) throw new Error(ERROR_NAN_INPUT)
     const unitDigitsLen = this.unitDigits.length
 
@@ -404,7 +417,7 @@ export class SmartUnit<D extends boolean = false, U extends string | number = st
    * @returns An object containing the numeric value, unit, and Decimal instance (if high-precision mode is enabled)
    * @throws An error if no predefined unit is matched
    */
-  splitUnit(str: string): FormattedValue<PickUnit<U>> {
+  splitUnit(str: string): FormattedValue<U> {
     const sortedUnits = this.sortedUnitNames
 
     for (const unit of sortedUnits) {
@@ -445,7 +458,7 @@ export class SmartUnit<D extends boolean = false, U extends string | number = st
    * @param fractionDigits - Optional decimal places for formatting output
    * @returns The converted number as a formatted string
    */
-  fromUnitFormat(num: Num<D>, unit: PickUnit<U>, fractionDigits?: FractionDigits): string {
+  fromUnitFormat(num: Num<D>, unit: U, fractionDigits?: FractionDigits): string {
     const nnum = this.toBase(num, unit)
     return this.format(nnum, fractionDigits)
   }

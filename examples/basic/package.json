@@ -7,10 +7,10 @@
   },
   "private": true,
   "scripts": {
-    "start": "tsx index.ts"
+    "start": "node --experimental-strip-types index.ts"
   },
   "type": "module",
   "dependencies": {
-    "smart-unit": "^1.0.5"
+    "smart-unit": "../../smart-unit-latest.tgz"
   }
 }

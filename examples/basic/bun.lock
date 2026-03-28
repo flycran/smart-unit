@@ -5,7 +5,7 @@
     "": {
       "name": "smart-unit-example",
       "dependencies": {
-        "smart-unit": "^1.0.5",
+        "smart-unit": "../../smart-unit-latest.tgz",
       },
       "devDependencies": {
         "tsx": "^4.21.0",
@@ -76,7 +76,7 @@
 
     "resolve-pkg-maps": ["resolve-pkg-maps@1.0.0", "https://registry.npmmirror.com/resolve-pkg-maps/-/resolve-pkg-maps-1.0.0.tgz", {}, "sha512-seS2Tj26TBVOC2NIc2rOe2y2ZO7efxITtLZcGSOnHHNOQ7CkiUBfw0Iw2ck6xkIhPwLhKNLS8BO+hEpngQlqzw=="],
 
-    "smart-unit": ["smart-unit@1.0.5", "https://registry.npmmirror.com/smart-unit/-/smart-unit-1.0.5.tgz", { "dependencies": { "decimal.js": "^10.5.0" } }, "sha512-QrT1EEaSh3Zpq6BGxKXuzkUG1O2StMYZBWAdLHohHbT4S3MO6+NT+iBElqSoRGHlruL1qSlIn/VLHhLSS8FPrQ=="],
+    "smart-unit": ["smart-unit@../../smart-unit-latest.tgz", { "dependencies": { "decimal.js": "^10.5.0" } }],
 
     "tsx": ["tsx@4.21.0", "https://registry.npmmirror.com/tsx/-/tsx-4.21.0.tgz", { "dependencies": { "esbuild": "~0.27.0", "get-tsconfig": "^4.7.5" }, "optionalDependencies": { "fsevents": "~2.3.3" }, "bin": { "tsx": "dist/cli.mjs" } }, "sha512-5C1sg4USs1lfG0GFb2RLXsdpXqBSEhAaA/0kPL01wxzpMqLILNxIxIOKiILz+cdg/pLnOUxFYOR5yhHU666wbw=="],
 

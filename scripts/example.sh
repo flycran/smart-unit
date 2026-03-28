@@ -1,3 +1,4 @@
+npm run build
 npm pack
 mv ./smart-unit-*.tgz ./smart-unit-latest.tgz
 cd ./examples/basic
