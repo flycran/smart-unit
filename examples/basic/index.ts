@@ -1,4 +1,4 @@
-import { SmartUnit } from 'smart-unit'
+import SmartUnit from 'smart-unit'
 
 // File size formatting
 const fileSize = new SmartUnit(['B', 'KB', 'MB', 'GB', 'TB'], {

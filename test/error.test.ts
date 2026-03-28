@@ -9,6 +9,13 @@ describe('Error handling tests', () => {
     })
   })
 
+  // 非法的单位集
+  describe('Invalid units configuration', () => {
+    it('should throw an error if units array length is odd', () => {
+      expect(() => new SmartUnit(['mm', 'cm'])).toThrow('The unit setting is incorrect; the element at index [1] should be of numeric type.')
+    })
+  })
+
   describe('getUnit', () => {
     const su = new SmartUnit(['mm', 10, 'cm'])
 
@@ -72,6 +79,11 @@ describe('Error handling tests', () => {
     // 空字符串
     it('should throw error for empty string', () => {
       expect(() => su.parse('')).toThrow('Undefined unit: "".')
+    })
+
+    // 无效的数值
+    it('should throw error for invalid number', () => {
+      expect(() => su.parse('invalidmm')).toThrow('Invalid number: "invalid".')
     })
   })
 })

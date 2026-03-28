@@ -73,30 +73,21 @@ export class SmartUnit<D extends boolean = false, U extends string | number = st
   readonly unitNames: PickUnit<U>[] = []
   readonly unitDigits: number[] = []
   readonly useDecimal: D
-  accumulatedDigits?: number[] = []
+  _accumulatedDigits?: number[]
+  get accumulatedDigits() {
+    if (!this._accumulatedDigits) this.createAccumulatedDigits()
+    return this._accumulatedDigits
+  }
+  _sortedUnitNames?: PickUnit<U>[]
+  get sortedUnitNames() {
+    if (!this._sortedUnitNames) this.createSortedUnitNames()
+    return this._sortedUnitNames
+  }
   public convert?: (str: PickUnit<U>) => string
   private DecimalClass: typeof DecimalConstructor = DecimalConstructor
 
-  // Biomejs BUG 修复后恢复这两行代码
-  // constructor(smartUnit: SmartUnit<D, U>)
-  // constructor(units: U[], option: SmartUnitOptions<D>)
-  constructor(unitsOrSmartUnit: U[] | SmartUnit<D, U>, option: SmartUnitOptions<D> = {}) {
-    // clone smartUnit
-    if (unitsOrSmartUnit instanceof SmartUnit) {
-      const smartUnit = unitsOrSmartUnit
-
-      this.threshold = smartUnit.threshold
-      this.fractionDigits = smartUnit.fractionDigits
-      this.unitNames = smartUnit.unitNames
-      this.unitDigits = smartUnit.unitDigits
-      this.useDecimal = smartUnit.useDecimal
-      this.accumulatedDigits = smartUnit.accumulatedDigits
-      this.convert = smartUnit.convert
-      this.DecimalClass = smartUnit.DecimalClass
-      return
-    }
+  constructor(units: U[], option: SmartUnitOptions<D> = {}) {
     // Initialize
-    const units = unitsOrSmartUnit
     if (!units.length) throw new Error('units is empty.')
     this.threshold = option.threshold || 1
     this.fractionDigits = option.fractionDigits
@@ -132,14 +123,15 @@ export class SmartUnit<D extends boolean = false, U extends string | number = st
       this.unitNames.push(units[units.length - 1] as PickUnit<U>)
     }
     // create accumulatedDigits
-    this.createAccumulatedDigits()
   }
 
-  // 获取累计进制位数
-  /**
-   * Gets the accumulated digits for the units
-   * @returns An array of accumulated digits
-   */
+  withConvert(convert: (str: PickUnit<U>) => string) {
+    const su: SmartUnit<D, U> = Object.create(this)
+    su.convert = convert
+    return su
+  }
+
+  // 累计进制位数
   private createAccumulatedDigits() {
     const accumulatedDigits = []
     this.unitDigits.forEach((digit, index) => {
@@ -149,7 +141,13 @@ export class SmartUnit<D extends boolean = false, U extends string | number = st
         accumulatedDigits.push(accumulatedDigits[index - 1] * digit)
       }
     })
-    this.accumulatedDigits = accumulatedDigits
+    this._accumulatedDigits = accumulatedDigits
+  }
+
+  // 长度排序后的单位名称
+  private createSortedUnitNames() {
+    const sortedUnits = [...this.unitNames].sort((a, b) => b.length - a.length)
+    this._sortedUnitNames = sortedUnits
   }
 
   // 根据输入数值获取单位和调整后的值
@@ -284,10 +282,10 @@ export class SmartUnit<D extends boolean = false, U extends string | number = st
       for (let i = this.accumulatedDigits.length - 1; i >= 0; i--) {
         const accDigit = this.accumulatedDigits[i]
         if (absDn.gte(accDigit)) {
-          const res = Math.floor(absDn.toNumber() / accDigit)
-          const val = isNegative ? -res : res
+          const res = absDn.dividedToIntegerBy(accDigit)
+          const val = isNegative ? res.neg() : res
           result.push({
-            num: val,
+            num: val.toNumber(),
             decimal: new this.DecimalClass(val),
             unit: this.unitNames[i + 1],
             numStr: this.formatNumber(val, this.fractionDigits),
@@ -349,11 +347,11 @@ export class SmartUnit<D extends boolean = false, U extends string | number = st
    * @param num - The input number to format
    * @returns The formatted chain string (e.g. "1m3s")
    */
-  formatChain(num: Num<D>): string {
+  formatChain(num: Num<D>, separator = ''): string {
     const chain = this.getChainUnit(num)
     return chain
       .map(({ numStr, unit }) => `${numStr}${this.convert ? this.convert(unit) : unit}`)
-      .join('')
+      .join(separator)
   }
 
   // 将给定数值从指定单位转换为基本单位
@@ -407,19 +405,22 @@ export class SmartUnit<D extends boolean = false, U extends string | number = st
    * @throws An error if no predefined unit is matched
    */
   splitUnit(str: string): FormattedValue<PickUnit<U>> {
-    const re = new RegExp(`^(-?\\d+(?:\\.\\d+)?)(${this.unitNames.map((u) => `${u}`).join('|')})`)
+    const sortedUnits = this.sortedUnitNames
 
-    const [, num, unit] = str.match(re) || []
-
-    if (num === undefined || unit === undefined) {
-      throw new Error(`Undefined unit: "${str}".`)
+    for (const unit of sortedUnits) {
+      if (str.endsWith(unit as string)) {
+        const numStr = str.slice(0, -unit.length)
+        const num = +numStr
+        if (Number.isNaN(num)) throw new Error(`Invalid number: "${numStr}".`)
+        return {
+          num,
+          unit,
+          decimal: this.useDecimal ? new this.DecimalClass(numStr) : undefined,
+        }
+      }
     }
 
-    return {
-      num: +num,
-      unit: unit as PickUnit<U>,
-      decimal: this.useDecimal ? new this.DecimalClass(num) : undefined,
-    }
+    throw new Error(`Undefined unit: "${str}".`)
   }
 
   // 将带单位的值转换为基础单位的数值

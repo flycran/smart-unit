@@ -10,7 +10,6 @@ const baseConfig = {
 
 const input = {
   index: './src/index.ts',
-  reactUtil: './src/reactUtil.ts',
 }
 
 export default defineConfig([

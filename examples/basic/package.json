@@ -7,11 +7,10 @@
   },
   "private": true,
   "scripts": {
-    "start": "tsx index.ts",
-    "start:i18n": "tsx i18n.ts"
+    "start": "tsx index.ts"
   },
   "type": "module",
   "dependencies": {
-    "smart-unit": "file:../.."
+    "smart-unit": "^1.0.5"
   }
 }

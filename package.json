@@ -1,36 +1,19 @@
 {
   "name": "smart-unit",
   "version": "2.0.0",
-  "description": "Elegant unit conversion utility with automatic unit selection and high-precision support",
-  "main": "dist/index.cjs",
+  "author": "flycran",
   "scripts": {
     "build": "rollup -c",
     "test": "vitest run",
     "test:watch": "vitest",
     "format": "biome format --fix ."
   },
-  "types": "dist/index.d.ts",
-  "module": "dist/index.mjs",
-  "exports": {
-    ".": {
-      "types": "./dist/index.d.ts",
-      "import": "./dist/index.mjs",
-      "require": "./dist/index.cjs"
-    },
-    "./react": {
-      "types": "./dist/reactUtil.d.ts",
-      "import": "./dist/reactUtil.mjs",
-      "require": "./dist/reactUtil.cjs"
-    }
-  },
   "repository": {
     "type": "git",
     "url": "https://github.com/flycran/smart-unit.git"
   },
-  "homepage": "https://github.com/flycran/smart-unit#readme",
-  "bugs": {
-    "url": "https://github.com/flycran/smart-unit/issues"
-  },
+  "main": "dist/index.cjs",
+  "module": "dist/index.mjs",
   "dependencies": {
     "decimal.js": "^10.5.0"
   },
@@ -39,19 +22,27 @@
     "@rollup/plugin-commonjs": "^28.0.3",
     "@rollup/plugin-node-resolve": "^16.0.1",
     "@rollup/plugin-typescript": "^12.3.0",
-    "@types/react": "^19.2.14",
     "rollup": "~4.30.1",
     "typescript": "^5.8.3",
     "vitest": "^4.1.0"
   },
-  "peerDependencies": {
-    "react": ">=16.8.0"
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.cjs"
+    }
   },
+  "bugs": {
+    "url": "https://github.com/flycran/smart-unit/issues"
+  },
+  "description": "Elegant unit conversion utility with automatic unit selection and high-precision support",
   "files": [
     "dist",
     "README.md",
     "README.zh-CN.md"
   ],
+  "homepage": "https://github.com/flycran/smart-unit#readme",
   "keywords": [
     "unit",
     "unit-conversion",
@@ -63,6 +54,6 @@
     "bigint",
     "typescript"
   ],
-  "author": "flycran",
-  "license": "MIT"
+  "license": "MIT",
+  "types": "dist/index.d.ts"
 }
