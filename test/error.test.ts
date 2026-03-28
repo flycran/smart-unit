@@ -41,6 +41,7 @@ describe('Error handling tests', () => {
 
     // 无效的单位
     it('should throw error for invalid unit', () => {
+      // @ts-expect-error
       expect(() => su.toBase(100, 'invalidUnit')).toThrow('Undefined unit: "invalidUnit".')
     })
   })

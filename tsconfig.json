@@ -1,11 +1,11 @@
 {
   "compilerOptions": {
     "module": "ESNext",
-    "moduleResolution": "node",
-    "declaration": true,
+    "moduleResolution": "bundler",
     "allowSyntheticDefaultImports": true,
     "sourceMap": false,
     "target": "es6",
+    "declaration": true,
     "declarationDir": "dist",
     "baseUrl": "./src",
     "skipLibCheck": true,
@@ -13,5 +13,7 @@
     "noImplicitAny": false,
     "forceConsistentCasingInFileNames": false
   },
-  "include": ["src/**/*"]
+  "include": [
+    "src/**/*"
+  ],
 }

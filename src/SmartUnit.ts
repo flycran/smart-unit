@@ -11,7 +11,7 @@ export type DecimalOptions = Decimal.Config
 
 export type PickUnit<U extends string | number> = Exclude<U, number>
 
-export interface SmartUnitOptions<HP extends boolean, U extends string | number> {
+export interface SmartUnitOptions<HP extends boolean> {
   // 进制位数
   /** Base digit for auto-generating unit conversions */
   baseDigit?: number
@@ -39,11 +39,6 @@ export interface SmartUnitOptions<HP extends boolean, U extends string | number>
    * - Used to customize precision and other parameters
    */
   decimalOptions?: DecimalOptions
-  /**
-   * Custom unit string conversion function
-   * - Often used for i18n
-   */
-  convert?: (str: PickUnit<U>) => string
 }
 
 export interface FormattedValue<U extends string> {
@@ -75,15 +70,33 @@ export class SmartUnit<D extends boolean = false, U extends string | number = st
   static ignoreNaNInputs = false
   readonly threshold: number
   readonly fractionDigits?: FractionDigits
-  readonly unitsStr: PickUnit<U>[] = []
+  readonly unitNames: PickUnit<U>[] = []
+  readonly unitDigits: number[] = []
   readonly useDecimal: D
+  accumulatedDigits?: number[] = []
   public convert?: (str: PickUnit<U>) => string
   private DecimalClass: typeof DecimalConstructor = DecimalConstructor
 
-  constructor(
-    readonly units: U[],
-    option: SmartUnitOptions<D, U> = {},
-  ) {
+  // Biomejs BUG 修复后恢复这两行代码
+  // constructor(smartUnit: SmartUnit<D, U>)
+  // constructor(units: U[], option: SmartUnitOptions<D>)
+  constructor(unitsOrSmartUnit: U[] | SmartUnit<D, U>, option: SmartUnitOptions<D> = {}) {
+    // clone smartUnit
+    if (unitsOrSmartUnit instanceof SmartUnit) {
+      const smartUnit = unitsOrSmartUnit
+
+      this.threshold = smartUnit.threshold
+      this.fractionDigits = smartUnit.fractionDigits
+      this.unitNames = smartUnit.unitNames
+      this.unitDigits = smartUnit.unitDigits
+      this.useDecimal = smartUnit.useDecimal
+      this.accumulatedDigits = smartUnit.accumulatedDigits
+      this.convert = smartUnit.convert
+      this.DecimalClass = smartUnit.DecimalClass
+      return
+    }
+    // Initialize
+    const units = unitsOrSmartUnit
     if (!units.length) throw new Error('units is empty.')
     this.threshold = option.threshold || 1
     this.fractionDigits = option.fractionDigits
@@ -92,18 +105,51 @@ export class SmartUnit<D extends boolean = false, U extends string | number = st
       this.DecimalClass = DecimalConstructor.clone(option.decimalOptions)
     }
     if (option.baseDigit) {
-      const us = []
       for (let i = 0; i < units.length; i++) {
-        this.unitsStr.push(units[i] as PickUnit<U>)
-        us.push(units[i], option.baseDigit)
+        const name = units[i] as PickUnit<U>
+        if (typeof name !== 'string')
+          throw new Error(
+            `The unit setting is incorrect; the element at index [${i}] should be of string type.`,
+          )
       }
-      this.units = us.slice(0, -1)
+      this.unitNames = units as PickUnit<U>[]
+      this.unitDigits = Array(units.length - 1).fill(option.baseDigit)
     } else {
-      for (let i = 0; i < units.length; i += 2) {
-        this.unitsStr.push(units[i] as PickUnit<U>)
+      for (let i = 1; i < units.length; i += 2) {
+        const digit = units[i]
+        if (typeof digit !== 'number')
+          throw new Error(
+            `The unit setting is incorrect; the element at index [${i}] should be of numeric type.`,
+          )
+        this.unitDigits.push(units[i] as number)
+        const name = units[i - 1] as PickUnit<U>
+        if (typeof name !== 'string')
+          throw new Error(
+            `The unit setting is incorrect; the element at index [${i - 1}] should be of string type.`,
+          )
+        this.unitNames.push(name)
       }
-      this.units = units
+      this.unitNames.push(units[units.length - 1] as PickUnit<U>)
     }
+    // create accumulatedDigits
+    this.createAccumulatedDigits()
+  }
+
+  // 获取累计进制位数
+  /**
+   * Gets the accumulated digits for the units
+   * @returns An array of accumulated digits
+   */
+  private createAccumulatedDigits() {
+    const accumulatedDigits = []
+    this.unitDigits.forEach((digit, index) => {
+      if (index === 0) {
+        accumulatedDigits.push(digit)
+      } else {
+        accumulatedDigits.push(accumulatedDigits[index - 1] * digit)
+      }
+    })
+    this.accumulatedDigits = accumulatedDigits
   }
 
   // 根据输入数值获取单位和调整后的值
@@ -115,52 +161,46 @@ export class SmartUnit<D extends boolean = false, U extends string | number = st
    */
   getUnit(num: Num<D>): FormattedValue<PickUnit<U>> {
     if (!SmartUnit.ignoreNaNInputs && Number.isNaN(num)) throw new Error(ERROR_NAN_INPUT)
-    let i = 1
+    const unitDigitsLen = this.unitDigits.length
 
     if (this.useDecimal) {
       const dn = new this.DecimalClass(typeof num === 'bigint' ? num.toString() : num)
       const isNegative = dn.isNegative()
       let absDn = isNegative ? dn.abs() : dn
-      while (i < this.units.length - 1) {
-        const n = this.units[i]
-        if (typeof n !== 'number')
-          throw new Error(
-            `The unit setting is incorrect; the element at index [${i}] should be of numeric type.`,
-          )
-        if (absDn.lt(n * this.threshold)) {
+      let i = 0
+      while (i < unitDigitsLen) {
+        const digit = this.unitDigits[i]
+        if (absDn.lt(digit * this.threshold)) {
           break
         }
-        absDn = absDn.dividedBy(n)
-        i += 2
+        absDn = absDn.dividedBy(digit)
+        i++
       }
       const result = isNegative ? absDn.neg() : absDn
       const n = result.toNumber()
       return {
         num: n,
         decimal: result,
-        unit: this.units[i - 1] as PickUnit<U>,
+        unit: this.unitNames[i] as PickUnit<U>,
         numStr: this.formatNumber(result, this.fractionDigits),
       }
     } else {
       if (typeof num !== 'number') throw new Error(ERROR_HIGH_PRECISION_NOT_ENABLED)
       const isNegative = num < 0
       let absNum = isNegative ? -num : num
-      while (i < this.units.length - 1) {
-        const n = this.units[i]
-        if (typeof n !== 'number')
-          throw new Error(
-            `The unit setting is incorrect; the element at index [${i}] should be of numeric type.`,
-          )
-        if (absNum < n * this.threshold) {
+      let i = 0
+      while (i < unitDigitsLen) {
+        const digit = this.unitDigits[i]
+        if (absNum < digit * this.threshold) {
           break
         }
-        absNum /= n
-        i += 2
+        absNum /= digit
+        i++
       }
       const result = isNegative ? -absNum : absNum
       return {
         num: result,
-        unit: this.units[i - 1] as PickUnit<U>,
+        unit: this.unitNames[i] as PickUnit<U>,
         numStr: this.formatNumber(result, this.fractionDigits),
       }
     }
@@ -234,99 +274,71 @@ export class SmartUnit<D extends boolean = false, U extends string | number = st
     const result: FormattedValue<PickUnit<U>>[] = []
 
     if (this.useDecimal) {
+      if (num === 0) {
+        return [{ num: 0, unit: this.unitNames[0], numStr: '0', decimal: new this.DecimalClass(0) }]
+      }
       const dn = new this.DecimalClass(typeof num === 'bigint' ? num.toString() : num)
       const isNegative = dn.isNegative()
       let absDn = isNegative ? dn.abs() : dn
 
-      // 从最大的单位开始，逐级向下计算
-      // 单位数组: [unit0, base0, unit1, base1, unit2, base2, unit3, ...]
-      // 从最后一个单位开始向前遍历
-      for (let i = this.units.length - 1; i >= 0; i -= 2) {
-        const unit = this.units[i] as PickUnit<U>
-
-        // 计算当前单位的值：从基础单位累计乘积到当前单位
-        let baseProduct = new this.DecimalClass(1)
-        for (let j = 1; j < i; j += 2) {
-          const base = this.units[j]
-          if (typeof base === 'number') {
-            baseProduct = baseProduct.times(base)
-          }
-        }
-
-        if (absDn.gte(baseProduct)) {
-          const quotient = absDn.dividedToIntegerBy(baseProduct)
-          const remainder = absDn.minus(quotient.times(baseProduct))
-
-          if (!quotient.isZero()) {
-            const signedQuotient = isNegative ? quotient.neg() : quotient
-            result.push({
-              num: signedQuotient.toNumber(),
-              decimal: signedQuotient,
-              unit,
-              numStr: this.formatNumber(signedQuotient, this.fractionDigits),
-            })
-          }
-          absDn = remainder
+      for (let i = this.accumulatedDigits.length - 1; i >= 0; i--) {
+        const accDigit = this.accumulatedDigits[i]
+        if (absDn.gte(accDigit)) {
+          const res = Math.floor(absDn.toNumber() / accDigit)
+          const val = isNegative ? -res : res
+          result.push({
+            num: val,
+            decimal: new this.DecimalClass(val),
+            unit: this.unitNames[i + 1],
+            numStr: this.formatNumber(val, this.fractionDigits),
+          })
+          absDn = absDn.minus(new this.DecimalClass(val).times(accDigit))
+          if (absDn.isZero()) break
         }
       }
-
-      // 如果没有添加任何单位（值太小），添加基础单位
-      if (result.length === 0) {
-        const baseUnit = this.units[0] as PickUnit<U>
-        const signedValue = isNegative ? absDn.neg() : absDn
+      if (!absDn.isZero()) {
+        const val = isNegative ? absDn.neg() : absDn
         result.push({
-          num: signedValue.toNumber(),
-          decimal: signedValue,
-          unit: baseUnit,
-          numStr: this.formatNumber(signedValue, this.fractionDigits),
+          num: val.toNumber(),
+          decimal: val,
+          unit: this.unitNames[0],
+          numStr: this.formatNumber(val, this.fractionDigits),
         })
       }
     } else {
       if (typeof num !== 'number') throw new Error(ERROR_HIGH_PRECISION_NOT_ENABLED)
+      if (num === 0) {
+        return [{ num: 0, unit: this.unitNames[0], numStr: '0' }]
+      }
       const isNegative = num < 0
       let absNum = isNegative ? -num : num
 
-      const unitsLen = this.units.length - 1
+      const accDigLen = this.accumulatedDigits.length
 
-      for (let i = 1; i < unitsLen; i += 2) {
-        const n = this.units[i]
-        if (typeof n !== 'number')
-          throw new Error(
-            `The unit setting is incorrect; the element at index [${i}] should be of numeric type.`,
-          )
-        const m = Math.floor(absNum % n)
-        if (m >= 1) {
-          const r = isNegative ? -m : m
-          result.push({
-            num: r,
-            unit: this.units[i - 1] as PickUnit<U>,
-            numStr: this.formatNumber(r, this.fractionDigits),
-          })
-        }
-        if (absNum < 1) break
-        absNum /= n
-      }
-
-      if (absNum >= 1) {
-        const m = Math.floor(absNum)
-        const r = isNegative ? -m : m
+      for (let i = accDigLen - 1; i >= 0; i--) {
+        const accDigit = this.accumulatedDigits[i]
+        if (absNum < accDigit) continue
+        const res = Math.floor(absNum / accDigit)
+        const val = isNegative ? -res : res
         result.push({
-          num: r,
-          unit: this.units[this.units.length - 1] as PickUnit<U>,
-          numStr: this.formatNumber(r, this.fractionDigits),
+          num: val,
+          unit: this.unitNames[i + 1],
+          numStr: val.toString(),
         })
+        absNum %= accDigit
+        if (absNum === 0) break
       }
 
-      if (result.length === 0) {
+      if (absNum !== 0) {
+        const val = isNegative ? -absNum : absNum
         result.push({
-          num: 0,
-          unit: this.units[0] as PickUnit<U>,
-          numStr: this.formatNumber(0, this.fractionDigits),
+          num: val,
+          unit: this.unitNames[0],
+          numStr: this.formatNumber(val, this.fractionDigits),
         })
       }
     }
-
-    return result.reverse()
+    return result
   }
 
   // 将数字格式化为链式单位字符串
@@ -353,45 +365,34 @@ export class SmartUnit<D extends boolean = false, U extends string | number = st
    * @returns The converted value in base unit
    *   - Returns Decimal if high-precision mode is enabled
    */
-  toBase(num: Num<D>, unit: string): D extends true ? Decimal : number {
+  toBase(num: Num<D>, unit: PickUnit<U>): D extends true ? Decimal : number {
     if (!SmartUnit.ignoreNaNInputs && Number.isNaN(num)) throw new Error(ERROR_NAN_INPUT)
-    let i = 0
+    const unitDigitsLen = this.unitDigits.length
 
     if (this.useDecimal) {
-      // High-precision calculation
       let dn = new this.DecimalClass(typeof num === 'bigint' ? num.toString() : num)
-      while (i < this.units.length) {
-        if (this.units[i] === unit) {
+      for (let i = 0; i < unitDigitsLen; i++) {
+        const digit = this.unitDigits[i]
+        if (this.unitNames[i] === unit) {
           return dn as D extends true ? Decimal : number
         }
-        if (typeof this.units[i] === 'undefined') {
-          break
-        }
-        const cn = this.units[i + 1]
-        if (typeof cn !== 'number')
-          throw Error(
-            `The unit setting is incorrect; the element at index [${i}] should be of numeric type.`,
-          )
-        dn = dn.times(cn)
-        i += 2
+        dn = dn.times(digit)
+      }
+      if (unit === this.unitNames.at(-1)) {
+        return dn as D extends true ? Decimal : number
       }
     } else {
       if (typeof num !== 'number') throw new Error(ERROR_HIGH_PRECISION_NOT_ENABLED)
       let nn = num
-      // Normal calculation
-      while (i < this.units.length) {
-        if (this.units[i] === unit) {
+      for (let i = 0; i < unitDigitsLen; i++) {
+        const digit = this.unitDigits[i]
+        if (this.unitNames[i] === unit) {
           return nn as D extends true ? Decimal : number
         }
-        if (typeof this.units[i + 1] === 'undefined') {
-          break
-        }
-        if (typeof this.units[i + 1] !== 'number')
-          throw Error(
-            `The unit setting is incorrect; the element at index [${i}] should be of numeric type.`,
-          )
-        nn *= this.units[i + 1] as number
-        i += 2
+        nn *= digit
+      }
+      if (unit === this.unitNames.at(-1)) {
+        return nn as D extends true ? Decimal : number
       }
     }
     throw new Error(`Undefined unit: "${unit}".`)
@@ -406,7 +407,7 @@ export class SmartUnit<D extends boolean = false, U extends string | number = st
    * @throws An error if no predefined unit is matched
    */
   splitUnit(str: string): FormattedValue<PickUnit<U>> {
-    const re = new RegExp(`^(\\d+(?:\\.\\d+)?)(${this.unitsStr.map((u) => `${u}`).join('|')})`)
+    const re = new RegExp(`^(-?\\d+(?:\\.\\d+)?)(${this.unitNames.map((u) => `${u}`).join('|')})`)
 
     const [, num, unit] = str.match(re) || []
 
@@ -443,7 +444,7 @@ export class SmartUnit<D extends boolean = false, U extends string | number = st
    * @param fractionDigits - Optional decimal places for formatting output
    * @returns The converted number as a formatted string
    */
-  fromUnitFormat(num: Num<D>, unit: string, fractionDigits?: FractionDigits): string {
+  fromUnitFormat(num: Num<D>, unit: PickUnit<U>, fractionDigits?: FractionDigits): string {
     const nnum = this.toBase(num, unit)
     return this.format(nnum, fractionDigits)
   }

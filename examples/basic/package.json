@@ -12,6 +12,6 @@
   },
   "type": "module",
   "dependencies": {
-    "smart-unit": "../.."
+    "smart-unit": "file:../.."
   }
 }
