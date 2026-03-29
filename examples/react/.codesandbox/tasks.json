@@ -1,9 +1,6 @@
 {
   "$schema": "https://codesandbox.io/schemas/tasks.json",
-  "setupTasks": [
-    "npm install bun@1 -g",
-    "bun install"
-  ],
+  "setupTasks": ["npm install bun@1 -g", "bun install"],
   "tasks": {
     "dev-server": {
       "name": "Start Dev Server",

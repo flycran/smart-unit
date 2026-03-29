@@ -5,7 +5,7 @@
  */
 
 /* Import fonts */
-@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&display=swap");
 
 /* ============================================================
    Design Tokens
@@ -13,9 +13,9 @@
 :root {
   /* --- Crane Brand --- */
   --crane-orange: #ffb22f;
-  --crane-green:  #21d486;
-  --crane-blue:   #00abff;
-  --crane-red:    #fb658b;
+  --crane-green: #21d486;
+  --crane-blue: #00abff;
+  --crane-red: #fb658b;
 
   /* --- VitePress overrides (light) --- */
   /* Primary → Crane Blue */
@@ -25,16 +25,16 @@
   --vp-c-brand-soft: rgba(0, 171, 255, 0.12);
 
   /* Background hierarchy – VSCode Light */
-  --vp-c-bg:          #ffffff;
-  --vp-c-bg-soft:     #f3f3f3;
-  --vp-c-bg-mute:     #e8e8e8;
-  --vp-c-bg-elv:      #ffffff;
-  --vp-c-bg-alt:      #f3f3f3;
+  --vp-c-bg: #ffffff;
+  --vp-c-bg-soft: #f3f3f3;
+  --vp-c-bg-mute: #e8e8e8;
+  --vp-c-bg-elv: #ffffff;
+  --vp-c-bg-alt: #f3f3f3;
 
   /* Border */
-  --vp-c-border:       #e0e0e0;
-  --vp-c-divider:      #e8e8e8;
-  --vp-c-gutter:       #e0e0e0;
+  --vp-c-border: #e0e0e0;
+  --vp-c-divider: #e8e8e8;
+  --vp-c-gutter: #e0e0e0;
 
   /* Text – VSCode Light palette */
   --vp-c-text-1: #1e1e1e;
@@ -46,48 +46,48 @@
   --vp-c-sidebar-bg: #f3f3f3;
 
   /* Nav */
-  --vp-nav-bg-color: rgba(255,255,255,0.95);
+  --vp-nav-bg-color: rgba(255, 255, 255, 0.95);
   --vp-nav-screen-bg-color: #f3f3f3;
 
   /* Code block – VSCode Light+ */
-  --vp-code-block-bg:               #f8f8f8;
-  --vp-code-block-color:            #1e1e1e;
-  --vp-code-line-highlight-color:   rgba(255, 178, 47, 0.12);
-  --vp-code-lang-color:             #999999;
-  --vp-code-copy-code-bg:           #ececec;
-  --vp-code-copy-code-hover-bg:     #e0e0e0;
+  --vp-code-block-bg: #f8f8f8;
+  --vp-code-block-color: #1e1e1e;
+  --vp-code-line-highlight-color: rgba(255, 178, 47, 0.12);
+  --vp-code-lang-color: #999999;
+  --vp-code-copy-code-bg: #ececec;
+  --vp-code-copy-code-hover-bg: #e0e0e0;
 
   /* Inline code */
-  --vp-code-color:    #d16969;
-  --vp-code-bg:       #efefef;
+  --vp-code-color: #d16969;
+  --vp-code-bg: #efefef;
 
   /* Tip / warning / danger callout colors */
-  --vp-custom-block-tip-border:   var(--crane-green);
-  --vp-custom-block-tip-text:     #1e6640;
-  --vp-custom-block-tip-bg:       rgba(33, 212, 134, 0.08);
-  --vp-custom-block-tip-code-bg:  rgba(33, 212, 134, 0.12);
+  --vp-custom-block-tip-border: var(--crane-green);
+  --vp-custom-block-tip-text: #1e6640;
+  --vp-custom-block-tip-bg: rgba(33, 212, 134, 0.08);
+  --vp-custom-block-tip-code-bg: rgba(33, 212, 134, 0.12);
 
   --vp-custom-block-warning-border: var(--crane-orange);
-  --vp-custom-block-warning-text:   #7a5800;
-  --vp-custom-block-warning-bg:     rgba(255, 178, 47, 0.08);
+  --vp-custom-block-warning-text: #7a5800;
+  --vp-custom-block-warning-bg: rgba(255, 178, 47, 0.08);
 
-  --vp-custom-block-danger-border:  var(--crane-red);
-  --vp-custom-block-danger-text:    #8b0021;
-  --vp-custom-block-danger-bg:      rgba(251, 101, 139, 0.08);
+  --vp-custom-block-danger-border: var(--crane-red);
+  --vp-custom-block-danger-text: #8b0021;
+  --vp-custom-block-danger-bg: rgba(251, 101, 139, 0.08);
 
-  --vp-custom-block-info-border:    var(--crane-blue);
-  --vp-custom-block-info-text:      #004f7a;
-  --vp-custom-block-info-bg:        rgba(0, 171, 255, 0.08);
+  --vp-custom-block-info-border: var(--crane-blue);
+  --vp-custom-block-info-text: #004f7a;
+  --vp-custom-block-info-bg: rgba(0, 171, 255, 0.08);
 
   /* Button */
-  --vp-button-brand-bg:          var(--crane-blue);
-  --vp-button-brand-hover-bg:    #0090d6;
-  --vp-button-brand-text:        #ffffff;
-  --vp-button-brand-hover-text:  #ffffff;
+  --vp-button-brand-bg: var(--crane-blue);
+  --vp-button-brand-hover-bg: #0090d6;
+  --vp-button-brand-text: #ffffff;
+  --vp-button-brand-hover-text: #ffffff;
 
-  --vp-button-alt-bg:            #e8e8e8;
-  --vp-button-alt-hover-bg:      #d4d4d4;
-  --vp-button-alt-text:          #1e1e1e;
+  --vp-button-alt-bg: #e8e8e8;
+  --vp-button-alt-hover-bg: #d4d4d4;
+  --vp-button-alt-text: #1e1e1e;
 
   /* Home hero gradient */
   --vp-home-hero-name-color: transparent;
@@ -99,7 +99,7 @@
   );
   --vp-home-hero-image-background-image: radial-gradient(
     ellipse at 60% 50%,
-    rgba(0, 171, 255, 0.20) 0%,
+    rgba(0, 171, 255, 0.2) 0%,
     rgba(33, 212, 134, 0.15) 40%,
     transparent 70%
   );
@@ -117,16 +117,16 @@
   --vp-c-brand-soft: rgba(0, 171, 255, 0.14);
 
   /* Background – VSCode Dark+ */
-  --vp-c-bg:          #1e1e1e;
-  --vp-c-bg-soft:     #252526;
-  --vp-c-bg-mute:     #2d2d2d;
-  --vp-c-bg-elv:      #252526;
-  --vp-c-bg-alt:      #181818;
+  --vp-c-bg: #1e1e1e;
+  --vp-c-bg-soft: #252526;
+  --vp-c-bg-mute: #2d2d2d;
+  --vp-c-bg-elv: #252526;
+  --vp-c-bg-alt: #181818;
 
   /* Border */
-  --vp-c-border:   #3c3c3c;
-  --vp-c-divider:  #3c3c3c;
-  --vp-c-gutter:   #3c3c3c;
+  --vp-c-border: #3c3c3c;
+  --vp-c-divider: #3c3c3c;
+  --vp-c-gutter: #3c3c3c;
 
   /* Text */
   --vp-c-text-1: #d4d4d4;
@@ -138,37 +138,37 @@
   --vp-c-sidebar-bg: #252526;
 
   /* Nav */
-  --vp-nav-bg-color: rgba(30,30,30,0.95);
+  --vp-nav-bg-color: rgba(30, 30, 30, 0.95);
   --vp-nav-screen-bg-color: #252526;
 
   /* Code block */
-  --vp-code-block-bg:           #1a1a1a;
-  --vp-code-line-highlight-color: rgba(255, 178, 47, 0.10);
-  --vp-code-copy-code-bg:       rgba(255, 255, 255, 0.08);
+  --vp-code-block-bg: #1a1a1a;
+  --vp-code-line-highlight-color: rgba(255, 178, 47, 0.1);
+  --vp-code-copy-code-bg: rgba(255, 255, 255, 0.08);
   --vp-code-copy-code-hover-bg: rgba(255, 255, 255, 0.14);
 
   /* Inline code */
   --vp-code-color: #ce9178;
-  --vp-code-bg:    #2d2d2d;
+  --vp-code-bg: #2d2d2d;
 
   /* Callouts */
-  --vp-custom-block-tip-text:     #21d486;
-  --vp-custom-block-tip-bg:       rgba(33, 212, 134, 0.10);
-  --vp-custom-block-tip-code-bg:  rgba(33, 212, 134, 0.15);
+  --vp-custom-block-tip-text: #21d486;
+  --vp-custom-block-tip-bg: rgba(33, 212, 134, 0.1);
+  --vp-custom-block-tip-code-bg: rgba(33, 212, 134, 0.15);
 
-  --vp-custom-block-warning-text:   #ffb22f;
-  --vp-custom-block-warning-bg:     rgba(255, 178, 47, 0.10);
+  --vp-custom-block-warning-text: #ffb22f;
+  --vp-custom-block-warning-bg: rgba(255, 178, 47, 0.1);
 
-  --vp-custom-block-danger-text:    #fb658b;
-  --vp-custom-block-danger-bg:      rgba(251, 101, 139, 0.10);
+  --vp-custom-block-danger-text: #fb658b;
+  --vp-custom-block-danger-bg: rgba(251, 101, 139, 0.1);
 
-  --vp-custom-block-info-text:      #00abff;
-  --vp-custom-block-info-bg:        rgba(0, 171, 255, 0.10);
+  --vp-custom-block-info-text: #00abff;
+  --vp-custom-block-info-bg: rgba(0, 171, 255, 0.1);
 
   /* Button */
-  --vp-button-alt-bg:       #2d2d2d;
+  --vp-button-alt-bg: #2d2d2d;
   --vp-button-alt-hover-bg: #3c3c3c;
-  --vp-button-alt-text:     #d4d4d4;
+  --vp-button-alt-text: #d4d4d4;
 
   /* Hero */
   --vp-home-hero-image-background-image: radial-gradient(
@@ -183,8 +183,8 @@
    Typography
    ============================================================ */
 :root {
-  --vp-font-family-base:  'JetBrains Mono', 'Fira Code', 'Cascadia Code', monospace;
-  --vp-font-family-mono:  'JetBrains Mono', 'Fira Code', monospace;
+  --vp-font-family-base: "JetBrains Mono", "Fira Code", "Cascadia Code", monospace;
+  --vp-font-family-mono: "JetBrains Mono", "Fira Code", monospace;
 }
 
 /* ============================================================
@@ -198,7 +198,7 @@
 
 /* Logo accent dot */
 .VPNavBarTitle .title::after {
-  content: '';
+  content: "";
   display: inline-block;
   width: 6px;
   height: 6px;
@@ -250,7 +250,7 @@
 }
 
 .vp-doc h1::before {
-  content: '';
+  content: "";
   display: inline-block;
   width: 4px;
   height: 0.85em;
@@ -266,7 +266,7 @@
 }
 
 .vp-doc h2::before {
-  content: '';
+  content: "";
   display: inline-block;
   width: 3px;
   height: 0.8em;
@@ -277,7 +277,7 @@
 }
 
 .vp-doc h3::before {
-  content: '// ';
+  content: "// ";
   color: var(--crane-green);
   font-weight: 400;
   opacity: 0.8;
@@ -288,7 +288,9 @@
   color: var(--crane-blue);
   text-decoration: none;
   border-bottom: 1px solid transparent;
-  transition: border-color 0.2s, color 0.2s;
+  transition:
+    border-color 0.2s,
+    color 0.2s;
 }
 .vp-doc a:hover {
   color: var(--crane-blue);
@@ -306,22 +308,20 @@
 }
 
 /* Code blocks */
-.vp-doc div[class*='language-'] {
+.vp-doc div[class*="language-"] {
   border: 1px solid var(--vp-c-border);
   border-radius: 8px;
   overflow: hidden;
 }
 
 /* Language badge */
-.vp-doc div[class*='language-'] > span.lang {
+.vp-doc div[class*="language-"] > span.lang {
   color: var(--crane-orange);
   font-size: 0.7rem;
   letter-spacing: 0.06em;
   font-weight: 600;
   text-transform: uppercase;
 }
-
-
 
 /* Blockquote */
 .vp-doc blockquote {
@@ -353,10 +353,26 @@
 /* ============================================================
    Badge
    ============================================================ */
-.VPBadge.tip     { background: rgba(33, 212, 134, 0.15); color: var(--crane-green); border: 1px solid var(--crane-green); }
-.VPBadge.warning { background: rgba(255, 178, 47, 0.15); color: var(--crane-orange); border: 1px solid var(--crane-orange); }
-.VPBadge.danger  { background: rgba(251, 101, 139, 0.15); color: var(--crane-red); border: 1px solid var(--crane-red); }
-.VPBadge.info    { background: rgba(0, 171, 255, 0.15); color: var(--crane-blue); border: 1px solid var(--crane-blue); }
+.VPBadge.tip {
+  background: rgba(33, 212, 134, 0.15);
+  color: var(--crane-green);
+  border: 1px solid var(--crane-green);
+}
+.VPBadge.warning {
+  background: rgba(255, 178, 47, 0.15);
+  color: var(--crane-orange);
+  border: 1px solid var(--crane-orange);
+}
+.VPBadge.danger {
+  background: rgba(251, 101, 139, 0.15);
+  color: var(--crane-red);
+  border: 1px solid var(--crane-red);
+}
+.VPBadge.info {
+  background: rgba(0, 171, 255, 0.15);
+  color: var(--crane-blue);
+  border: 1px solid var(--crane-blue);
+}
 
 /* ============================================================
    Home Page Hero
@@ -377,10 +393,12 @@
   background: var(--crane-blue) !important;
   border-color: var(--crane-blue) !important;
   box-shadow: 0 0 20px rgba(0, 171, 255, 0.25);
-  transition: box-shadow 0.2s, transform 0.2s !important;
+  transition:
+    box-shadow 0.2s,
+    transform 0.2s !important;
 }
 .VPButton.brand:hover {
-  box-shadow: 0 0 30px rgba(0, 171, 255, 0.40);
+  box-shadow: 0 0 30px rgba(0, 171, 255, 0.4);
   transform: translateY(-1px);
 }
 
@@ -395,7 +413,10 @@
   border: 1px solid var(--vp-c-border) !important;
   background: var(--vp-c-bg-soft) !important;
   border-radius: 10px !important;
-  transition: border-color 0.2s, box-shadow 0.2s, transform 0.2s !important;
+  transition:
+    border-color 0.2s,
+    box-shadow 0.2s,
+    transform 0.2s !important;
 }
 .VPFeature:hover {
   border-color: var(--crane-blue) !important;
@@ -404,10 +425,18 @@
 }
 
 /* Cycle feature icon colors */
-.VPFeatures .VPFeature:nth-child(4n+1) .icon { color: var(--crane-blue); }
-.VPFeatures .VPFeature:nth-child(4n+2) .icon { color: var(--crane-green); }
-.VPFeatures .VPFeature:nth-child(4n+3) .icon { color: var(--crane-orange); }
-.VPFeatures .VPFeature:nth-child(4n+4) .icon { color: var(--crane-red); }
+.VPFeatures .VPFeature:nth-child(4n + 1) .icon {
+  color: var(--crane-blue);
+}
+.VPFeatures .VPFeature:nth-child(4n + 2) .icon {
+  color: var(--crane-green);
+}
+.VPFeatures .VPFeature:nth-child(4n + 3) .icon {
+  color: var(--crane-orange);
+}
+.VPFeatures .VPFeature:nth-child(4n + 4) .icon {
+  color: var(--crane-red);
+}
 
 .VPFeature .title {
   font-weight: 700 !important;
@@ -442,11 +471,11 @@
    ============================================================ */
 /* 用 VitePress 官方 token 控制搜索弹窗样式 */
 :root {
-  --vp-local-search-highlight-color:      var(--crane-blue);
+  --vp-local-search-highlight-color: var(--crane-blue);
   --vp-local-search-highlight-text-color: #ffffff;
 }
 .dark {
-  --vp-local-search-highlight-color:      var(--crane-blue);
+  --vp-local-search-highlight-color: var(--crane-blue);
   --vp-local-search-highlight-text-color: #ffffff;
 }
 
@@ -475,6 +504,6 @@
 /* ============================================================
    Code block: light mode override
    ============================================================ */
-html:not(.dark) .vp-doc div[class*='language-'] {
+html:not(.dark) .vp-doc div[class*="language-"] {
   box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06);
 }
