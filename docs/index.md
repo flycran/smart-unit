@@ -17,18 +17,18 @@ hero:
       link: https://github.com/flycran/smart-unit
 
 features:
-  - icon: 🎯
-    title: 智能格式化
-    details: 自动选择最优单位进行展示，让数据更易读
-  - icon: 🔢
-    title: 双向转换
-    details: 支持单位格式化（format）和反向解析（parse）
-  - icon: ⚡
-    title: 高性能
-    details: 极小开销，支持 Node.js 和浏览器环境
+  - icon: 🌍
+    title: 支持世界上任何单位
+    details: 灵活的单位系统，可轻松定义和使用任意单位
+  - icon: 🧪
+    title: 单元测试覆盖
+    details: 完善的测试体系，确保代码质量与稳定性
   - icon: 🧮
-    title: 高精度计算
+    title: 支持高精度计算
     details: 可选 decimal.js 集成，支持任意精度和大数
+  - icon: 🌐
+    title: 国际化支持
+    details: 内置多语言支持，轻松适配全球用户
   - icon: 📦
     title: TypeScript 优先
     details: 完整的类型安全，优秀的开发体验

@@ -38,3 +38,4 @@ lerna-debug.log*
 
 # docs
 /docs/.vitepress/cache
+/docs/.vitepress/dist

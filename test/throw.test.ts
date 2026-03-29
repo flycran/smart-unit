@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import SmartUnit, { ERROR_HIGH_PRECISION_NOT_ENABLED, ERROR_NAN_INPUT } from '../src'
+import SmartUnit, { ERROR_NAN_INPUT } from '../src'
 
 describe('Error handling tests', () => {
   // 未提供有效的单位集
@@ -22,19 +22,6 @@ describe('Error handling tests', () => {
     // 意外的NaN输入
     it('should throw error for unintentional NaN input', () => {
       expect(() => su.getUnit(NaN)).toThrow(ERROR_NAN_INPUT)
-    })
-
-    // 有意的NaN输入
-    it('should allow intentional NaN input when configured', () => {
-      SmartUnit.ignoreNaNInputs = true
-      expect(() => su.getUnit(NaN)).not.toThrow()
-      SmartUnit.ignoreNaNInputs = false // Reset for other tests
-    })
-
-    // 未开启高精度模式
-    it('should throw error when high precision is not enabled', () => {
-      // @ts-expect-error
-      expect(() => su.getUnit('123')).toThrow(ERROR_HIGH_PRECISION_NOT_ENABLED)
     })
   })
 

@@ -17,9 +17,6 @@
   },
   "main": "dist/index.cjs",
   "module": "dist/index.mjs",
-  "dependencies": {
-    "decimal.js": "^10.5.0"
-  },
   "devDependencies": {
     "@biomejs/biome": "2.4.7",
     "@rollup/plugin-commonjs": "^28.0.3",
@@ -30,11 +27,19 @@
     "vitepress": "^1.6.4",
     "vitest": "^4.1.0"
   },
+  "peerDependencies": {
+    "decimal.js": "^10.5.0"
+  },
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
       "import": "./dist/index.mjs",
       "require": "./dist/index.cjs"
+    },
+    "./precision": {
+      "types": "./dist/precision.d.ts",
+      "import": "./dist/precision.mjs",
+      "require": "./dist/precision.cjs"
     }
   },
   "bugs": {

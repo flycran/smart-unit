@@ -43,8 +43,30 @@ export default defineConfig({
       lang: 'en',
       link: '/en/',
       themeConfig: {
-        nav: [],
-        sidebar: [],
+        nav: [
+          { text: 'Home', link: '/en/' },
+          { text: 'Guide', link: '/en/guide/' },
+          { text: 'API', link: '/en/api' },
+        ],
+        sidebar: [
+          {
+            text: 'Guide',
+            items: [
+              { text: 'Quick Start', link: '/en/guide/' },
+              { text: 'Common Units', link: '/en/guide/units' },
+              { text: 'High Precision', link: '/en/guide/high-precision' },
+              { text: 'Chain Formatting', link: '/en/guide/chain-format' },
+              { text: 'Internationalization', link: '/en/guide/i18n' },
+            ],
+          },
+          {
+            text: 'API Reference',
+            items: [
+              { text: 'SmartUnit', link: '/en/api/' },
+              { text: 'Interfaces', link: '/en/api/interface' },
+            ],
+          },
+        ],
       },
     },
   },
@@ -56,6 +78,7 @@ export default defineConfig({
   },
 
   themeConfig: {
+    outline: [1, 3],
     search: {
       provider: 'local',
     },

@@ -1,7 +1,8 @@
 import SmartUnit, { type GetUnitNames } from 'smart-unit'
+import SmartUnitPrecision from 'smart-unit/precision'
 
 // File size formatting
-const fileSize = new SmartUnit(['B', 'KB', 'MB', 'GB', 'TB'], {
+const fileSize = new SmartUnit(['B', 'KB', 'MB', 'GB', 'TB', 'PB'], {
   baseDigit: 1024,
 })
 
@@ -32,9 +33,7 @@ console.log(time.parse('2.5h'), 'ms') // 9000000 ms
 console.log(time.parse('30m'), 'ms') // 1800000 ms
 
 // High-precision mode with BigInt
-const bigLength = new SmartUnit(['pm', 1000, 'nm', 1000, 'μm', 1000, 'mm', 1000, 'm'], {
-  useDecimal: true,
-})
+const bigLength = new SmartUnitPrecision(['pm', 1000, 'nm', 1000, 'μm', 1000, 'mm', 1000, 'm'])
 
 console.log('\n=== High Precision Examples ===')
 console.log(bigLength.format('1000')) // 1nm
@@ -46,9 +45,8 @@ console.log('\nBigInt input:', bigNumber.toString())
 console.log('Formatted:', bigLength.format(bigNumber))
 
 // Financial calculations
-const currency = new SmartUnit(['', 'K', 'M', 'B', 'T'], {
+const currency = new SmartUnitPrecision(['', 'K', 'M', 'B', 'T'], {
   baseDigit: 1000,
-  useDecimal: true,
   fractionDigits: 2,
 })
 

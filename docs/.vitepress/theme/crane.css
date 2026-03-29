@@ -142,8 +142,10 @@
   --vp-nav-screen-bg-color: #252526;
 
   /* Code block */
-  --vp-code-block-bg: #1a1a1a;
+  --vp-code-block-bg:           #1a1a1a;
   --vp-code-line-highlight-color: rgba(255, 178, 47, 0.10);
+  --vp-code-copy-code-bg:       rgba(255, 255, 255, 0.08);
+  --vp-code-copy-code-hover-bg: rgba(255, 255, 255, 0.14);
 
   /* Inline code */
   --vp-code-color: #ce9178;
@@ -216,14 +218,14 @@
 /* ============================================================
    Sidebar
    ============================================================ */
-/* 激活项文字：仅改颜色和粗细，完全不动布局 */
+/* 激活项文字 */
 .VPSidebarItem.is-active > .item .text,
 .VPSidebarItem.is-active > .item .link-text {
   color: var(--crane-blue) !important;
   font-weight: 600;
 }
 
-/* VitePress 侧边栏激活竖条由 .indicator 元素实现，直接改其颜色 */
+/* VitePress 侧边栏激活竖条 */
 .VPSidebarItem.is-active > .item .indicator {
   background-color: var(--crane-blue) !important;
 }
@@ -319,6 +321,8 @@
   text-transform: uppercase;
 }
 
+
+
 /* Blockquote */
 .vp-doc blockquote {
   border-left: 3px solid var(--crane-blue);
@@ -373,7 +377,7 @@
   background: var(--crane-blue) !important;
   border-color: var(--crane-blue) !important;
   box-shadow: 0 0 20px rgba(0, 171, 255, 0.25);
-  transition: box-shadow 0.2s, transform 0.2s;
+  transition: box-shadow 0.2s, transform 0.2s !important;
 }
 .VPButton.brand:hover {
   box-shadow: 0 0 30px rgba(0, 171, 255, 0.40);
@@ -391,7 +395,7 @@
   border: 1px solid var(--vp-c-border) !important;
   background: var(--vp-c-bg-soft) !important;
   border-radius: 10px !important;
-  transition: border-color 0.2s, box-shadow 0.2s, transform 0.2s;
+  transition: border-color 0.2s, box-shadow 0.2s, transform 0.2s !important;
 }
 .VPFeature:hover {
   border-color: var(--crane-blue) !important;
@@ -431,6 +435,25 @@
 }
 ::-webkit-scrollbar-thumb:hover {
   background: var(--crane-blue);
+}
+
+/* ============================================================
+   Search
+   ============================================================ */
+/* 用 VitePress 官方 token 控制搜索弹窗样式 */
+:root {
+  --vp-local-search-highlight-color:      var(--crane-blue);
+  --vp-local-search-highlight-text-color: #ffffff;
+}
+.dark {
+  --vp-local-search-highlight-color:      var(--crane-blue);
+  --vp-local-search-highlight-text-color: #ffffff;
+}
+
+/* 去掉搜索框 focus 时的蓝色光晕 */
+.VPLocalSearchBox input {
+  box-shadow: none !important;
+  outline: none !important;
 }
 
 /* ============================================================

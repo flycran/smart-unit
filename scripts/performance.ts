@@ -1,4 +1,5 @@
 import SmartUnit from '../src'
+import SmartUnitPrecision from '../src/precision'
 
 const results: {
   name: string
@@ -35,13 +36,13 @@ function benchmark(name: string, fn: () => void) {
 
 // 性能测试
 const time = new SmartUnit(['ms', 1000, 's', 60, 'm', 60, 'h'])
-const timeHP = new SmartUnit(['ms', 1000, 's', 60, 'm', 60, 'h'], { useDecimal: true })
+const timeHP = new SmartUnitPrecision(['ms', 1000, 's', 60, 'm', 60, 'h'])
 
 benchmark('getChainUnit', () => {
   time.getChainUnit(6300000)
 })
 
-benchmark('getChainUnit & useDecimal', () => {
+benchmark('getChainUnit & SmartUnitPrecision', () => {
   timeHP.getChainUnit(6300000)
 })
 
@@ -49,7 +50,7 @@ benchmark('getUnit', () => {
   time.getUnit(6300000)
 })
 
-benchmark('getUnit & useDecimal', () => {
+benchmark('getUnit & SmartUnitPrecision', () => {
   timeHP.getUnit(6300000)
 })
 

@@ -6,6 +6,13 @@
 npm install smart-unit
 ```
 
+### 如果需要高精度计算
+
+```bash
+npm install smart-unit decimal.js
+```
+
+
 ## 基础用法
 
 ### 1. 创建实例
@@ -59,8 +66,7 @@ new SmartUnit(units, {
   baseDigit: 1024,        // 自动生成比例
   threshold: 1,           // 单位切换阈值
   fractionDigits: 2,      // 小数位数
-  useDecimal: false,      // 启用高精度模式
-  decimalOptions: {},     // Decimal.js 配置
+  decimalOptions: {},     // Decimal.js 配置 (仅在高精度模式下有效)
 })
 ```
 

@@ -6,143 +6,183 @@
 
 创建一个单位转换器实例。
 
+> `SmartUnit` 和 `SmartUnitPrecision` 的方法几乎一样，为了方便教程，将他们的API放在一起介绍。在有差异的地方会进行说明。标注了仅高精度模式的API将只在 `SmartUnitPrecision` 中可用。
+
 #### 参数
 
 **units** `(string | number)[]`
 
-单位名称和转换比例数组：
+单位名称和转换比例数组
+
+1. 如果是固定比例单位：
+- 必须是字符串数组，且必须指定`options.baseDigit`
+
+2. 如果是可变比例单位：
 - **偶数索引**：单位名称（如 `'B'`, `'KB'`, `'MB'`）
 - **奇数索引**：到下一单位的转换比例（如 `1024`）
 
-**options** `SmartUnitOptions` (可选)
+**options** [`SmartUnitOptions`](./interface.md#smartunitoptions) (可选)
 
 配置对象。
 
-#### 示例
+- **options.baseDigit** `number`
 
-```ts
-// 使用 baseDigit 自动生成比例
-const size = new SmartUnit(['B', 'KB', 'MB', 'GB'], { 
-  baseDigit: 1024 
-})
+  基本比例
 
-// 手动指定每个单位的比例
-const length = new SmartUnit(['mm', 10, 'cm', 100, 'm', 1000, 'km'])
+- **options.threshold** `number` 上升换单位的阈值，超出阈值时上升到下一单位，默认为`1`
 
-// 启用高精度模式
-const precise = new SmartUnit(['B', 'KB', 'MB'], { 
-  baseDigit: 1024,
-  useDecimal: true 
-})
-```
+- **options.fractionDigits** [`FractionDigits`](./interface.md#fractiondigits) (可选) 小数位数
+
+  小数位数
+  可以指定动态范围
+  - `1` 固定小数位数，不足时补零，超出时截断
+  - `'1-'` 最小小数位数，不足时补零
+  - `'-3'` 最大小数位数，超出时截断
+  - `'1-3'` 小数范围，不足时补零，超出时截断
+
+- **options.separator** `string` 分隔符，用于链式单位的分隔，也可以在 `formatChain` 方法中指定
+
+- **options.decimalOptions** `DecimalOptions` 传递给 `Decimal` 的选项，仅高精度模式可用
 
 ## 方法
 
-### `.format(num, fractionDigits?)`
+### `format(num, fractionDigits?)`
 
 将数值格式化为最优单位的字符串。
 
-```ts
-const size = new SmartUnit(['B', 'KB', 'MB'], { 
-  baseDigit: 1024, 
-  fractionDigits: 2 
-})
+#### 参数
 
-size.format(1536)           // => "1.50KB"
-size.format(1536, 0)        // => "2KB"
-size.format(1536, '1-3')    // => "1.5KB"
-```
+- **num** `number` 或者 [`NumPrecision`](./interface.md#numprecision) (仅高精度模式下)
 
-### `.parse(str)`
+**fractionDigits** [`FractionDigits`](./interface.md#fractiondigits) (可选) 小数位数，默认为 `options.fractionDigits`
+
+### `getUnit(num, fractionDigits?)`
+
+如果想高度自定义格式，可以使用 `getUnit` 方法获取到计算结果后按照任意方式格式化。
+
+#### 参数
+
+- **num** `number` 或者 [`NumPrecision`](./interface.md#numprecision) (仅高精度模式下)
+
+**fractionDigits** [`FractionDigits`](./interface.md#fractiondigits) (可选) 小数位数，默认为 `options.fractionDigits`
+
+#### 返回值
+
+[`FormattedValue`](./interface.md#formattedvalue)
+
+### `formatChain(num, separator?)`
+
+将数值格式化为多个单位的组合字符串，例如 "1h1m1s".
+
+#### 参数
+
+- **num** `number` 或者 [`NumPrecision`](./interface.md#numprecision) (仅高精度模式下)
+
+**separator** `string` (可选) 分隔符，默认为 `options.separator`
+
+#### 返回值
+
+`string`
+
+### `getChainUnit(num)`
+
+如果想高度自定义格式，可以使用 `getChainUnit` 方法获取到计算结果后按照任意方式格式化。
+
+#### 参数
+
+- **num** `number` 或者 [`NumPrecision`](./interface.md#numprecision) (仅高精度模式下)
+
+#### 返回值
+
+[`FormattedValue[]`](./interface.md#formattedvalue)
+
+### `parse(str)`
 
 将带单位的字符串解析为基础单位的数值。
 
-```ts
-const size = new SmartUnit(['B', 'KB', 'MB'], { baseDigit: 1024 })
+#### 参数
 
-size.parse('1.5KB')  // => 1536
-size.parse('2MB')    // => 2097152
-```
+- **str** `string` 待解析的字符串
 
-### `.getUnit(num)`
+#### 返回值
 
-获取最优单位和转换后的值（不进行格式化）。
+`number` 或者 `Decimal` (仅高精度模式下)
 
-```ts
-const size = new SmartUnit(['B', 'KB', 'MB'], { baseDigit: 1024 })
 
-size.getUnit(1536)
-// => { num: 1.5, unit: 'KB', numStr: '1.5' }
-```
-
-### `.toBase(num, unit)`
+### `toBase(num, unit)`
 
 将指定单位的值转换为基础单位。
 
-```ts
-const length = new SmartUnit(['mm', 10, 'cm', 100, 'm'])
+#### 参数
 
-length.toBase(1.5, 'm')   // => 1500 (mm)
-length.toBase(100, 'cm')  // => 1000 (mm)
-```
+- **num** `number`或者[`NumPrecision`](./interface.md#numprecision)(仅高精度模式下)
 
-### `.splitUnit(str)`
+- **unit** `string` 单位名称
+
+#### 返回值
+
+`number` 或者 `Decimal` (仅高精度模式下)
+
+### `splitUnit(str)`
 
 从格式化字符串中提取数值和单位。
 
-```ts
-const size = new SmartUnit(['B', 'KB', 'MB'], { baseDigit: 1024 })
+#### 参数
 
-size.splitUnit('1.5KB')  // => { num: 1.5, unit: 'KB' }
-```
+- **str** `string` 待解析的字符串
 
-### `.fromUnitFormat(num, unit, fractionDigits?)`
+#### 返回值
+
+[`FormattedValue`](./interface.md#formattedvalue)
+
+### `fromUnitFormat(num, unit, fractionDigits?)`
 
 从一种单位转换到最优单位并格式化。
 
-```ts
-const length = new SmartUnit(['mm', 10, 'cm', 100, 'm', 1000, 'km'])
+#### 参数
 
-length.fromUnitFormat(1500, 'm')  // => "1.5km"
-```
+- **num** `number` 或者 [`NumPrecision`](./interface.md#numprecision) (仅高精度模式下)
 
-### `.formatChain(num, separator?)`
+- **unit** `string` 单位名称
 
-将数值格式化为多个单位的组合字符串。
+- **fractionDigits** [`FractionDigits`](./interface.md#fractiondigits) (可选) 小数位数，默认为 `options.fractionDigits`
 
-```ts
-const time = new SmartUnit(['ms', 1000, 's', 60, 'm', 60, 'h'])
+#### 返回值
 
-time.formatChain(3661000)      // => "1h1m1s"
-time.formatChain(3661000, ' ') // => "1h 1m 1s"
-```
+`string`
 
-### `.getChainUnit(num)`
+### `formatNumber(num, fractionDigits?)`
 
-获取链式单位数组（不格式化）。
+将数值按照指定小数位数格式化。
 
-```ts
-const time = new SmartUnit(['ms', 1000, 's', 60, 'm', 60, 'h'])
+#### 参数
 
-time.getChainUnit(3661000)
-// => [
-//   { num: 1, unit: 'h', numStr: '1' },
-//   { num: 1, unit: 'm', numStr: '1' },
-//   { num: 1, unit: 's', numStr: '1' }
-// ]
-```
+- **num** `number` 或者 [`NumPrecision`](./interface.md#numprecision) (仅高精度模式下)
 
-### `.withConvert(convertFn)`
+**fractionDigits** [`FractionDigits`](./interface.md#fractiondigits) (可选) 小数位数，默认为 `options.fractionDigits`
 
-添加单位转换函数（用于国际化等场景）。
+#### 返回值
 
-```ts
-const size = new SmartUnit(['B', 'KB', 'MB'], { baseDigit: 1024 })
+`string`
 
-const zhSize = size.withConvert((unit) => {
-  const map = { B: '字节', KB: '千字节', MB: '兆字节' }
-  return map[unit] || unit
-})
+## 属性
 
-zhSize.format(1536)  // => "1.5 千字节"
-```
+### threshold: `number`
+
+上升换单位的阈值，只读。
+
+### separator: `string`
+
+分隔符，只读。
+
+### fractionDigits: [`FractionDigits`](./interface.md#fractiondigits)
+
+小数位数，只读。
+
+### unitNames: `string[]`
+
+单位名称，只读。
+
+### unitDigits: `number[]`
+
+单位比例，只读。

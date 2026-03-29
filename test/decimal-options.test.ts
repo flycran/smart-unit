@@ -1,37 +1,35 @@
 import { describe, expect, it } from 'vitest'
-import SmartUnit from '../src'
+import SmartUnitPrecision from '../src/precision'
 
 // DecimalOptions 配置测试
 describe('DecimalOptions configuration tests', () => {
+  const input = '123456789012345678901234567890'
+
   // 默认精度（20位）
   it('should use default precision without decimalOptions', () => {
-    const su = new SmartUnit(['mm', 10, 'cm', 100, 'm', 1e3, 'km'], {
-      useDecimal: true,
-    })
-    const result = su.getUnit('123456789012345678901234567890')
+    const su = new SmartUnitPrecision(['mm', 10, 'cm', 100, 'm', 1e3, 'km'])
+    const result = su.getUnit(input)
     // 默认20位精度，超大数值会用科学计数法
     expect(result.decimal?.toString()).toEqual('1.234567890123456789e+23')
   })
 
   // 自定义精度50位
   it('should use custom precision of 50', () => {
-    const su = new SmartUnit(
+    const su = new SmartUnitPrecision(
       ['mm', 10, 'cm', 100, 'm', 1e3, 'km', 1e3, 'Mm', 1e3, 'Gm', 1e3, 'Tm'],
       {
-        useDecimal: true,
-        decimalOptions: { precision: 50 },
+        decimalOptions: { precision: 30 },
       },
     )
-    const result = su.getUnit('123456789012345678901234567890')
+    const result = su.getUnit(input)
     expect(result.decimal?.toString()).toEqual('123456789012345.67890123456789')
   })
 
   // 高精度80位
   it('should use high precision of 80', () => {
-    const su = new SmartUnit(
+    const su = new SmartUnitPrecision(
       ['mm', 10, 'cm', 100, 'm', 1e3, 'km', 1e3, 'Mm', 1e3, 'Gm', 1e3, 'Tm'],
       {
-        useDecimal: true,
         decimalOptions: { precision: 80 },
       },
     )
@@ -42,11 +40,8 @@ describe('DecimalOptions configuration tests', () => {
 
   // 不同实例独立配置
   it('should keep independent precision for different instances', () => {
-    const su20 = new SmartUnit(['mm', 10, 'cm', 100, 'm', 1e3, 'km'], {
-      useDecimal: true,
-    })
-    const su50 = new SmartUnit(['mm', 10, 'cm', 100, 'm', 1e3, 'km'], {
-      useDecimal: true,
+    const su20 = new SmartUnitPrecision(['mm', 10, 'cm', 100, 'm', 1e3, 'km'])
+    const su50 = new SmartUnitPrecision(['mm', 10, 'cm', 100, 'm', 1e3, 'km'], {
       decimalOptions: { precision: 50 },
     })
 
@@ -62,8 +57,7 @@ describe('DecimalOptions configuration tests', () => {
 
   // 四舍五入配置
   it('should respect rounding mode configuration', () => {
-    const suRoundHalfUp = new SmartUnit(['mm', 10, 'cm', 100, 'm'], {
-      useDecimal: true,
+    const suRoundHalfUp = new SmartUnitPrecision(['mm', 10, 'cm', 100, 'm'], {
       decimalOptions: { precision: 20, rounding: 4 }, // ROUND_HALF_UP
     })
 
@@ -74,8 +68,7 @@ describe('DecimalOptions configuration tests', () => {
 
   // 科学计数法阈值配置
   it('should respect toExpPos configuration', () => {
-    const su = new SmartUnit(['mm', 10, 'cm', 100, 'm', 1e3, 'km'], {
-      useDecimal: true,
+    const su = new SmartUnitPrecision(['mm', 10, 'cm', 100, 'm', 1e3, 'km'], {
       decimalOptions: { precision: 50, toExpPos: 30 },
     })
 

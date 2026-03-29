@@ -10,6 +10,7 @@ const baseConfig = {
 
 const input = {
   index: './src/index.ts',
+  precision: './src/precision.ts',
 }
 
 export default defineConfig([

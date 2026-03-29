@@ -1,6 +1,6 @@
-# 高精度计算
+# High Precision
 
-使用 `decimal.js` 进行高精度计算，处理超出 JavaScript 安全整数范围的大数。
+Use `decimal.js` for high-precision calculations to handle numbers beyond JavaScript's safe integer range.
 
 ```ts
 import SmartUnitPrecision from 'smart-unit/precision'
@@ -10,40 +10,40 @@ const precise = new SmartUnitPrecision(['B', 'KB', 'MB'], {
 })
 ```
 
-## BigInt 支持
+## BigInt Support
 
 ```ts
 const size = new SmartUnitPrecision(['B', 'KB', 'MB', 'GB', 'TB', 'PB'], {
   baseDigit: 1024,
 })
 
-// BigInt 输入
+// BigInt input
 console.log(size.format(1024n ** 6n))  // => "1024PB"
 ```
 
-## 字符串输入保持精度
+## String Input Preserving Precision
 
 ```ts
 const size = new SmartUnitPrecision(['B', 'KB', 'MB', 'GB', 'TB', 'PB'], {
   baseDigit: 1024,
 })
 
-// 超出 Number.MAX_SAFE_INTEGER 的数值
+// Values exceeding Number.MAX_SAFE_INTEGER
 console.log(size.format('1152921504606846976'))  // => "1024PB"
 ```
 
-## 自定义 Decimal 配置
+## Custom Decimal Configuration
 
 ```ts
 const customPrecise = new SmartUnitPrecision(['B', 'KB', 'MB'], {
   baseDigit: 1024,
   decimalOptions: {
-    precision: 30,      // 设置精度为 30 位有效数字
-    rounding: 4,        // 四舍五入模式
+    precision: 30,      // Set precision to 30 significant digits
+    rounding: 4,        // Rounding mode
   }
 })
 ```
 
-::: warning 性能考虑
-高精度计算比普通计算慢，仅在需要处理大数或高精度时使用。
+::: warning Performance Considerations
+High-precision calculations are slower than regular calculations. Use only when handling large numbers or high precision is required.
 :::

@@ -5,6 +5,7 @@
  */
 
 export * from './SmartUnit'
+export * from './utils'
 
 import { SmartUnit } from './SmartUnit'
 export default SmartUnit

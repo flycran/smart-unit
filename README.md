@@ -1,6 +1,6 @@
 # smart-unit
 
-> 优雅的 JavaScript & TypeScript 单位转换工具
+> Elegant unit conversion utility for JavaScript & TypeScript
 
 [![npm version](https://img.shields.io/npm/v/smart-unit)](https://www.npmjs.com/package/smart-unit)
 [![npm downloads](https://img.shields.io/npm/dm/smart-unit)](https://www.npmjs.com/package/smart-unit)
@@ -9,12 +9,12 @@
 [![license](https://img.shields.io/npm/l/smart-unit)](./LICENSE)
 
 <p align="center">
-  <a href="./README.md">English</a> | 中文 | <a href="https://flycran.github.io/smart-unit">完整文档</a>
+  English | <a href="./README.zh-CN.md">中文</a> | <a href="https://flycran.github.io/smart-unit/en">Documentation</a>
 </p>
 
 ---
 
-**smart-unit** 是一个轻量级的自动单位转换工具，支持智能格式化输出。
+**smart-unit** is a lightweight automatic unit conversion tool with intelligent formatting.
 
 ```ts
 import SmartUnit from 'smart-unit';
@@ -26,29 +26,29 @@ size.format(1536);               // "1.5KB"
 size.parse('2.5GB');             // 2684354560
 ```
 
-## 特性
+## Features
 
-- 🎯 **智能格式化** — 自动选择最优单位进行展示
-- 🔢 **双向转换** — 支持单位格式化（`format`）和反向解析（`parse`）
-- ⚡ **高性能** — 极小开销，支持 Node.js 和浏览器
-- 🧮 **高精度** — 可选 `decimal.js` 集成，支持任意精度计算
-- 📦 **TypeScript 优先** — 完整的类型安全
-- 🪶 **轻量级** — 核心功能，体积小巧
-- ✅ **测试完善** — 100+ 测试用例，覆盖各种边缘情况
+- 🎯 **Smart Formatting** — Automatically selects the optimal unit for display
+- 🔢 **Bidirectional Conversion** — Supports unit formatting (`format`) and reverse parsing (`parse`)
+- ⚡ **High Performance** — Minimal overhead, supports Node.js and browsers
+- 🧮 **High Precision** — Optional `decimal.js` integration for arbitrary precision calculations
+- 📦 **TypeScript First** — Complete type safety
+- 🪶 **Lightweight** — Core functionality with small bundle size
+- ✅ **Well Tested** — 100+ test cases covering various edge cases
 
-## 安装
+## Installation
 
 ```bash
 npm install smart-unit
 ```
 
-## 在线体验
+## Try It Online
 
-[![在 CodeSandbox 中编辑](https://codesandbox.io/static/img/play-codesandbox.svg)](https://codesandbox.io/s/github/flycran/smart-unit/tree/master/examples/basic)
+[![Edit in CodeSandbox](https://codesandbox.io/static/img/play-codesandbox.svg)](https://codesandbox.io/s/github/flycran/smart-unit/tree/master/examples/basic)
 
-## 快速开始
+## Quick Start
 
-### 固定比例单位
+### Fixed Ratio Units
 
 ```ts
 import SmartUnit from 'smart-unit';
@@ -61,7 +61,7 @@ fileSize.format(1024 * 1024 * 100);  // => "100MB"
 fileSize.format(1536);               // => "1.5KB"
 ```
 
-### 可变比例单位
+### Variable Ratio Units
 
 ```ts
 const length = new SmartUnit(['mm', 10, 'cm', 100, 'm', 1000, 'km']);
@@ -70,7 +70,7 @@ length.format(1500);     // => "1.5m"
 length.format(1500000);  // => "1.5km"
 ```
 
-### 高精度与 BigInt 支持
+### High Precision & BigInt Support
 
 ```ts
 import { SmartUnitPrecision } from 'smart-unit/precision'
@@ -79,11 +79,11 @@ const bigLength = new SmartUnitPrecision(
   ['mm', 10, 'cm', 100, 'm', 1000, 'km', 1000, 'Mm', 1000, 'Gm', 1000, 'Tm']
 );
 
-// 支持 BigInt 和超出 JS 安全整数范围的数值
+// Supports BigInt and values beyond JS safe integer range
 bigLength.format(10n ** 18n);  // => "1000Tm"
 ```
 
-### 解析单位字符串
+### Parsing Unit Strings
 
 ```ts
 const time = new SmartUnit(['ms', 1000, 's', 60, 'm', 60, 'h']);
@@ -92,7 +92,7 @@ time.parse('90s');   // => 90000 (ms)
 time.parse('2.5h');  // => 9000000 (ms)
 ```
 
-### 链式单位
+### Chain Formatting
 
 ```ts
 const time = new SmartUnit(['ms', 1000, 's', 60, 'm', 60, 'h']);
@@ -101,7 +101,7 @@ time.formatChain(63000) // => 1m3s
 time.formatChain(3663000);  // => 1h1m3s
 ```
 
-### 国际化
+### Internationalization
 
 ```ts
 const i18nMap = {
@@ -120,27 +120,27 @@ timeI18n.formatChain(90000) // 1minutes 30seconds
 timeI18n.formatChain(9000000) // 2hours 30minutes
 ```
 
-## 使用 TypeScript
+## Using TypeScript
 
-SmartUnit拥有完整的类型安全支持，适用于 TypeScript 项目。
+SmartUnit provides complete type safety support for TypeScript projects.
 
 ```ts
 import SmartUnit, { type GetUnitNames } from 'smart-unit'
 
 const time = new SmartUnit(['ms', 1000, 's', 60, 'm', 60, 'h'])
-// 使用工具函数导出类型
+// Use utility function to export types
 type TimeUnits = GetUnitNames<typeof time> // => type TimeUnits = "m" | "ms" | "s" | "h"
 
-// t函数必须能接受所有TimeUnits单位，否则将导致类型错误
+// The t function must accept all TimeUnits units, otherwise a type error will occur
 const timeI18n = time.withConvert(t)
-// toBase的unit参数收到TimeUnits类型约束
+// The unit parameter of toBase receives TimeUnits type constraint
 time.toBase(60, 'h')
 ```
 
-## 贡献
+## Contributing
 
-欢迎贡献！请随时提交 issue 或 pull request。
+Contributions are welcome! Feel free to submit issues or pull requests.
 
-## 许可证
+## License
 
 MIT © [flycran](https://github.com/flycran)
