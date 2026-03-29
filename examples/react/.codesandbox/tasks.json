@@ -1,7 +1,7 @@
 {
   "$schema": "https://codesandbox.io/schemas/tasks.json",
   "setupTasks": [
-    "npm install bun@2 -g",
+    "npm install bun@1 -g",
     "bun install"
   ],
   "tasks": {
