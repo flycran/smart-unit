@@ -9,7 +9,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "smart-unit": "../../smart-unit-latest.tgz",
+    "smart-unit": "^2.0.0",
     "vue": "^3.5.25",
     "vue-i18n": "^11.3.0"
   },

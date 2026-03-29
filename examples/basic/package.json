@@ -1,15 +1,15 @@
 {
   "name": "basic",
-  "private": true,
   "version": "1.0.0",
   "devDependencies": {
     "typescript": "^5.9.3"
   },
+  "private": true,
   "scripts": {
     "start": "node --experimental-strip-types index.ts"
   },
   "type": "module",
   "dependencies": {
-    "smart-unit": "../../smart-unit-latest.tgz"
+    "smart-unit": "^2.0.0"
   }
 }

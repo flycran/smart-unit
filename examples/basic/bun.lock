@@ -5,7 +5,7 @@
     "": {
       "name": "smart-unit-example",
       "dependencies": {
-        "smart-unit": "../../smart-unit-latest.tgz",
+        "smart-unit": "^2.0.0",
       },
       "devDependencies": {
         "typescript": "^5.9.3",
@@ -15,7 +15,7 @@
   "packages": {
     "decimal.js": ["decimal.js@10.6.0", "https://registry.npmmirror.com/decimal.js/-/decimal.js-10.6.0.tgz", {}, "sha512-YpgQiITW3JXGntzdUmyUR1V812Hn8T1YVXhCu+wO3OpS4eU9l4YdD3qjyiKdV6mvV29zapkMeD390UVEf2lkUg=="],
 
-    "smart-unit": ["smart-unit@../../smart-unit-latest.tgz", { "peerDependencies": { "decimal.js": "^10.5.0" } }],
+    "smart-unit": ["smart-unit@2.0.0", "https://registry.npmmirror.com/smart-unit/-/smart-unit-2.0.0.tgz", { "peerDependencies": { "decimal.js": "^10.5.0" } }, "sha512-2OgFhFk1TbrF9iEftvPcQF7zLhSXV7jTN3Rm46z73caveBCnDAS0LVruS9E20vC86E87LZZPsFgzUE/uowHEtA=="],
 
     "typescript": ["typescript@5.9.3", "https://registry.npmmirror.com/typescript/-/typescript-5.9.3.tgz", { "bin": { "tsc": "bin/tsc", "tsserver": "bin/tsserver" } }, "sha512-jl1vZzPDinLr9eUt3J/t7V6FgNEw9QjvBPdysz9KfQDD41fQrC2Y4vKQdiaUpFT4bXlb1RHhLpp8wtm6M5TgSw=="],
   }
