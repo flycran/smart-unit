@@ -1,15 +1,12 @@
 {
   "$schema": "https://codesandbox.io/schemas/tasks.json",
   "setupTasks": [
-    {
-      "name": "Installing Dependencies",
-      "command": "npx bun install"
-    }
+    "npm install"
   ],
   "tasks": {
     "dev-server": {
       "name": "Start Dev Server",
-      "command": "bun run dev",
+      "command": "npm run dev",
       "runAtStart": true,
       "preview": {
         "port": 5173
