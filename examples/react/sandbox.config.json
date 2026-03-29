@@ -1,3 +1,5 @@
 {
+  "template": "node",
+  "startScript": "dev",
   "previewPort": 5173
 }
