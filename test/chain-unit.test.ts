@@ -1,71 +1,157 @@
 import { describe, expect, it } from 'vitest'
 import SmartUnit from '../src'
 
-// 链式单位测试 - 文件大小
-describe('Chain unit - file size', () => {
-  const size = new SmartUnit(['B', 1024, 'KB', 1024, 'MB', 1024, 'GB'])
-
-  it('should format 1536B as 1KB512B', () => {
-    expect(size.formatChain(1536)).toEqual('1KB512B')
-  })
-
-  it('should format 1073741824B as 1GB', () => {
-    expect(size.formatChain(1073741824)).toEqual('1GB')
-  })
-
-  it('should format 1074790400B as 1GB1MB', () => {
-    expect(size.formatChain(1074790400)).toEqual('1GB1MB')
-  })
+// 链式单位测试
+const time = new SmartUnit(['ms', 1000, 's', 60, 'm', 60, 'h'], {
+  separator: ' ',
 })
 
-// 链式单位测试 - 时间单位
-describe('Chain unit - time units', () => {
-  const time = new SmartUnit(['ms', 1000, 's', 60, 'm', 60, 'h'], {
-    separator: ' ',
-  })
-
-  it('should format 1000ms as 1s', () => {
+// 格式化
+describe('Chain unit formatChain', () => {
+  it('should format', () => {
     expect(time.formatChain(1000)).toEqual('1s')
-  })
-
-  it('should format 63000ms as 1m3s', () => {
     expect(time.formatChain(63000)).toEqual('1m 3s')
-  })
-
-  it('should format 3663000ms as 1h1m3s', () => {
     expect(time.formatChain(3663000)).toEqual('1h 1m 3s')
   })
 
-  it('should format 500ms as 500ms', () => {
-    expect(time.formatChain(500)).toEqual('500ms')
-  })
-
-  it('should format 0ms as 0ms', () => {
-    expect(time.formatChain(0)).toEqual('0ms')
-  })
-
-  it('should format 3663000ms as 1h:1m:3s', () => {
+  it('should format with custom separator', () => {
+    expect(time.formatChain(1000, ':')).toEqual('1s')
+    expect(time.formatChain(63000, ':')).toEqual('1m:3s')
     expect(time.formatChain(3663000, ':')).toEqual('1h:1m:3s')
   })
 
-  it('getChainUnit should return array for 63000ms', () => {
+  it('should format zero', () => {
+    expect(time.formatChain(0)).toEqual('0ms')
+  })
+
+  it('should format negative values', () => {
+    expect(time.formatChain(-63000)).toEqual('-1m -3s')
+    expect(time.formatChain(-500)).toEqual('-500ms')
+    expect(time.formatChain(-1000)).toEqual('-1s')
+  })
+})
+
+// 获取单位
+describe('Chain unit getChainUnit', () => {
+  it('should return array for 1000ms', () => {
+    const result = time.getChainUnit(1000)
+    expect(result).toEqual([{ num: 1, unit: 's', numStr: '1' }])
+  })
+
+  it('should return array for 63000ms', () => {
     const result = time.getChainUnit(63000)
     expect(result).toEqual([
       { num: 1, unit: 'm', numStr: '1' },
       { num: 3, unit: 's', numStr: '3' },
     ])
   })
-})
 
-// 链式单位测试 - 负数
-describe('Chain unit - negative values', () => {
-  const time = new SmartUnit(['ms', 1000, 's', 60, 'm'])
-
-  it('should format -63000ms as -1m-3s', () => {
-    expect(time.formatChain(-63000)).toEqual('-1m-3s')
+  it('should format zero', () => {
+    expect(time.getChainUnit(0)).toEqual([{ num: 0, unit: 'ms', numStr: '0' }])
   })
 
-  it('should format -500ms as -500ms', () => {
-    expect(time.formatChain(-500)).toEqual('-500ms')
+  it('should format negative values', () => {
+    expect(time.getChainUnit(-63000)).toEqual([
+      { num: -1, unit: 'm', numStr: '-1' },
+      { num: -3, unit: 's', numStr: '-3' },
+    ])
+    expect(time.getChainUnit(-500)).toEqual([{ num: -500, unit: 'ms', numStr: '-500' }])
+    expect(time.getChainUnit(-1000)).toEqual([{ num: -1, unit: 's', numStr: '-1' }])
+  })
+})
+
+// 分割单位
+describe('Chain unit splitChainUnit', () => {
+  it('should ssplitChainUnit', () => {
+    expect(time.splitChainUnit('1s')).toEqual([{ num: 1, unit: 's', numStr: '1' }])
+    expect(time.splitChainUnit('1m 3s')).toEqual([
+      { num: 1, unit: 'm', numStr: '1' },
+      { num: 3, unit: 's', numStr: '3' },
+    ])
+    expect(time.splitChainUnit('1h 1m 3s')).toEqual([
+      { num: 1, unit: 'h', numStr: '1' },
+      { num: 1, unit: 'm', numStr: '1' },
+      { num: 3, unit: 's', numStr: '3' },
+    ])
+  })
+
+  it('should splitChainUnit with custom separator', () => {
+    expect(time.splitChainUnit('1s', ':')).toEqual([{ num: 1, unit: 's', numStr: '1' }])
+    expect(time.splitChainUnit('1m:3s', ':')).toEqual([
+      { num: 1, unit: 'm', numStr: '1' },
+      { num: 3, unit: 's', numStr: '3' },
+    ])
+    expect(time.splitChainUnit('1h:1m:3s', ':')).toEqual([
+      { num: 1, unit: 'h', numStr: '1' },
+      { num: 1, unit: 'm', numStr: '1' },
+      { num: 3, unit: 's', numStr: '3' },
+    ])
+  })
+
+  it('should splitChainUnit with zero', () => {
+    expect(time.splitChainUnit('0ms')).toEqual([{ num: 0, unit: 'ms', numStr: '0' }])
+  })
+
+  it('should splitChainUnit with negative values', () => {
+    expect(time.splitChainUnit('-1s')).toEqual([{ num: -1, unit: 's', numStr: '-1' }])
+    expect(time.splitChainUnit('-1m -3s')).toEqual([
+      { num: -1, unit: 'm', numStr: '-1' },
+      { num: -3, unit: 's', numStr: '-3' },
+    ])
+    expect(time.splitChainUnit('-1h -1m -3s')).toEqual([
+      { num: -1, unit: 'h', numStr: '-1' },
+      { num: -1, unit: 'm', numStr: '-1' },
+      { num: -3, unit: 's', numStr: '-3' },
+    ])
+  })
+})
+
+// 解析单位
+describe('Chain unit parseChain', () => {
+  it('should parse', () => {
+    expect(time.parseChain('1s')).toEqual(1000)
+    expect(time.parseChain('1m 3s')).toEqual(63000)
+    expect(time.parseChain('1h 1m 3s')).toEqual(3663000)
+  })
+
+  it('should parse with custom separator', () => {
+    expect(time.parseChain('1s', ':')).toEqual(1000)
+    expect(time.parseChain('1m:3s', ':')).toEqual(63000)
+    expect(time.parseChain('1h:1m:3s', ':')).toEqual(3663000)
+  })
+
+  it('should parse zero', () => {
+    expect(time.parseChain('0ms')).toEqual(0)
+  })
+
+  it('should parse negative values', () => {
+    expect(time.parseChain('-1s')).toEqual(-1000)
+    expect(time.parseChain('-1m -3s')).toEqual(-63000)
+    expect(time.parseChain('-1h -1m -3s')).toEqual(-3663000)
+  })
+})
+
+// 巡回测试
+describe('Chain unit circulation', () => {
+  it('should circulation', () => {
+    expect(time.formatChain(time.parseChain('1s'))).toEqual('1s')
+    expect(time.formatChain(time.parseChain('1m 3s'))).toEqual('1m 3s')
+    expect(time.formatChain(time.parseChain('1h 1m 3s'))).toEqual('1h 1m 3s')
+  })
+
+  it('should circulation with custom separator', () => {
+    expect(time.formatChain(time.parseChain('1s', ':'), ':')).toEqual('1s')
+    expect(time.formatChain(time.parseChain('1m 3s', ':'), ':')).toEqual('1m:3s')
+    expect(time.formatChain(time.parseChain('1h 1m 3s', ':'), ':')).toEqual('1h:1m:3s')
+  })
+
+  it('should circulation with zero', () => {
+    expect(time.formatChain(time.parseChain('0ms'))).toEqual('0ms')
+  })
+
+  it('should circulation with negative values', () => {
+    expect(time.formatChain(time.parseChain('-1s'))).toEqual('-1s')
+    expect(time.formatChain(time.parseChain('-1m -3s'))).toEqual('-1m -3s')
+    expect(time.formatChain(time.parseChain('-1h -1m -3s'))).toEqual('-1h -1m -3s')
   })
 })

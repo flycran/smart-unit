@@ -4,7 +4,8 @@ export default defineConfig({
   test: {
     typecheck: {
       enabled: true,
-      include: ['test/*.type.test.ts']
+      tsconfig: 'tsconfig.test.json',
+      include: ['test/*.d.test.ts']
     }
   }
 })

@@ -1,5 +1,5 @@
-import SmartUnit from '../src'
-import SmartUnitPrecision from '../src/precision'
+import SmartUnit from 'smart-unit'
+import SmartUnitPrecision from 'smart-unit/precision'
 
 const results: {
   name: string
@@ -52,6 +52,14 @@ benchmark('getUnit', () => {
 
 benchmark('getUnit & SmartUnitPrecision', () => {
   timeHP.getUnit(6300000)
+})
+
+benchmark('splitUnit', () => {
+  timeHP.splitUnit('6300000s')
+})
+
+benchmark('parseChain', () => {
+  timeHP.parseChain('1h1m1s')
 })
 
 console.table(

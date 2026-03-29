@@ -1,7 +1,11 @@
+import { SmartUnitBase } from './SmartUnitBase'
 import {
-  SmartUnitBase,
-} from './SmartUnitBase'
-import { ERROR_NAN_INPUT, type FormattedValue, type FractionDigits, type InputNumber, type SmartUnitOptions } from './utils'
+  ERROR_NAN_INPUT,
+  type FormattedValue,
+  type FractionDigits,
+  type InputNumber,
+  type SmartUnitOptions,
+} from './utils'
 
 export class SmartUnit<U extends string = string> extends SmartUnitBase<U> {
   constructor(units: (U | number)[], option: SmartUnitOptions = {}) {
@@ -16,7 +20,10 @@ export class SmartUnit<U extends string = string> extends SmartUnitBase<U> {
    * @param fractionDigits - Decimal precision configuration
    * @returns The FormattedValue object containing the number, unit, and formatted number string
    */
-  getUnit(num: InputNumber, fractionDigits: FractionDigits = this.fractionDigits): FormattedValue<U> {
+  getUnit(
+    num: InputNumber,
+    fractionDigits: FractionDigits = this.fractionDigits,
+  ): FormattedValue<U> {
     if (Number.isNaN(num)) throw new Error(ERROR_NAN_INPUT)
     const unitDigitsLen = this.unitDigits.length
     const isNegative = num < 0
@@ -133,7 +140,7 @@ export class SmartUnit<U extends string = string> extends SmartUnitBase<U> {
     throw new Error(`Undefined unit: "${unit}".`)
   }
 
-  // 将带单位的值转换为基础单位的数值
+  // 将带单位的字符串转换为基础单位的数值
   /**
    * Parses a string with unit into a base unit numeric value
    *
@@ -143,6 +150,22 @@ export class SmartUnit<U extends string = string> extends SmartUnitBase<U> {
   parse(str: string): number {
     const { num, unit } = this.splitUnit(str)
     return this.toBase(num, unit)
+  }
+
+  // 将带链式单位的字符串转换为基础单位的数值
+  /**
+   * Parses a string with chain units into a base unit numeric value
+   *
+   * @param str - Input string containing a number and unit
+   * @returns The value converted to base unit
+   */
+  parseChain(str: string, separator: string = this.separator): number {
+    const units = this.splitChainUnit(str, separator)
+    let sum = 0
+    for (const unit of units) {
+      sum += this.toBase(unit.num, unit.unit)
+    }
+    return sum
   }
 
   // 将给定数值从原单位转换为最佳单位，并可指定小数精度

@@ -27,9 +27,9 @@ Configuration object.
 
 - **options.baseDigit** `number`
 
-  Base ratio for auto-generating unit conversions
+  Base ratio
 
-- **options.threshold** `number` Threshold for unit switching. The comparison value is multiplied by this threshold. Default is `1`
+- **options.threshold** `number` Threshold for unit switching. When the threshold is exceeded, it rises to the next unit. Default is `1`
 
 - **options.fractionDigits** [`FractionDigits`](./interface.md#fractiondigits) (Optional) Number of decimal places
 
@@ -45,9 +45,9 @@ Configuration object.
 
 ## Methods
 
-### `format(num, fractionDigits?)`
+### format
 
-Formats a number as a string with the optimal unit.
+`format(num, fractionDigits?)` Formats a number as a string with the optimal unit.
 
 #### Parameters
 
@@ -55,9 +55,9 @@ Formats a number as a string with the optimal unit.
 
 **fractionDigits** [`FractionDigits`](./interface.md#fractiondigits) (Optional) Number of decimal places, defaults to `options.fractionDigits`
 
-### `getUnit(num, fractionDigits?)`
+### getUnit
 
-If you want highly customized formatting, you can use the `getUnit` method to get the calculation result and format it however you want.
+`getUnit(num, fractionDigits?)` If you want highly customized formatting, you can use the `getUnit` method to get the calculation result and format it however you want.
 
 #### Parameters
 
@@ -69,9 +69,9 @@ If you want highly customized formatting, you can use the `getUnit` method to ge
 
 [`FormattedValue`](./interface.md#formattedvalue)
 
-### `formatChain(num, separator?)`
+### formatChain
 
-Formats a number as a string combining multiple units, e.g., "1h1m1s".
+`formatChain(num, separator?)` Formats a number as a string combining multiple units, e.g., "1h1m1s".
 
 #### Parameters
 
@@ -83,9 +83,9 @@ Formats a number as a string combining multiple units, e.g., "1h1m1s".
 
 `string`
 
-### `getChainUnit(num)`
+### getChainUnit
 
-If you want highly customized formatting, you can use the `getChainUnit` method to get the calculation result and format it however you want.
+`getChainUnit(num)` If you want highly customized formatting, you can use the `getChainUnit` method to get the calculation result and format it however you want.
 
 #### Parameters
 
@@ -95,9 +95,9 @@ If you want highly customized formatting, you can use the `getChainUnit` method 
 
 [`FormattedValue[]`](./interface.md#formattedvalue)
 
-### `parse(str)`
+### parse
 
-Parses a string with unit into a base unit numeric value.
+`parse(str)` Parses a string with unit into a base unit numeric value.
 
 #### Parameters
 
@@ -108,9 +108,23 @@ Parses a string with unit into a base unit numeric value.
 `number` or `Decimal` (only in high-precision mode)
 
 
-### `toBase(num, unit)`
+### `parseChain(str, separator?)`
 
-Converts a value from the specified unit to the base unit.
+Parses a string with chain units into a base unit numeric value.
+
+#### Parameters
+
+- **str** `string` String to parse
+
+- **separator** `string` (Optional) Separator, defaults to `options.separator`
+
+#### Returns
+
+`number` or `Decimal` (only in high-precision mode)
+
+### toBase
+
+`toBase(num, unit)` Converts a value from the specified unit to the base unit.
 
 #### Parameters
 
@@ -122,9 +136,9 @@ Converts a value from the specified unit to the base unit.
 
 `number` or `Decimal` (only in high-precision mode)
 
-### `splitUnit(str)`
+### splitUnit
 
-Extracts the numeric value and unit from a formatted string.
+`splitUnit(str)` Extracts the numeric value and unit from a formatted string.
 
 #### Parameters
 
@@ -134,9 +148,23 @@ Extracts the numeric value and unit from a formatted string.
 
 [`FormattedValue`](./interface.md#formattedvalue)
 
-### `fromUnitFormat(num, unit, fractionDigits?)`
+### splitChainUnit
 
-Converts a value from the original unit to the optimal unit and formats it.
+`splitChainUnit(str, separator)` Splits a chain unit string into numbers and units.
+
+#### Parameters
+
+- **str** `string` String to parse
+
+- **separator** `string` Separator
+
+#### Returns
+
+[`FormattedValue[]`](./interface.md#formattedvalue)
+
+### fromUnitFormat
+
+`fromUnitFormat(num, unit, fractionDigits?)` Converts a value from the original unit to the optimal unit and formats it.
 
 #### Parameters
 
@@ -150,9 +178,9 @@ Converts a value from the original unit to the optimal unit and formats it.
 
 `string`
 
-### `formatNumber(num, fractionDigits?)`
+### formatNumber
 
-Formats a number with the specified decimal places.
+`formatNumber(num, fractionDigits?)` Formats a number with the specified decimal places.
 
 #### Parameters
 
@@ -166,22 +194,22 @@ Formats a number with the specified decimal places.
 
 ## Properties
 
-### threshold: `number`
+### threshold
 
-Threshold for unit switching, read-only.
+`number` Threshold for unit switching, read-only.
 
-### separator: `string`
+### separator
 
-Separator, read-only.
+`string` Separator, read-only.
 
-### fractionDigits: [`FractionDigits`](./interface.md#fractiondigits)
+### fractionDigits
 
-Number of decimal places, read-only.
+[`FractionDigits`](./interface.md#fractiondigits) Number of decimal places, read-only.
 
-### unitNames: `string[]`
+### unitNames
 
-Unit names, read-only.
+`string[]` Unit names, read-only.
 
-### unitDigits: `number[]`
+### unitDigits
 
-Unit ratios, read-only.
+`number[]` Unit ratios, read-only.

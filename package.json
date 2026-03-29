@@ -1,11 +1,13 @@
 {
   "name": "smart-unit",
-  "version": "2.0.0",
+  "type": "module",
+  "version": "2.1.0",
   "author": "flycran",
   "scripts": {
     "build": "rollup -c",
     "test": "vitest run",
     "test:watch": "vitest",
+    "test:performance": "node scripts/src/performance.ts",
     "format": "biome format --fix .",
     "docs:dev": "vitepress dev docs",
     "docs:build": "vitepress build docs",

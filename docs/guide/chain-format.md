@@ -54,3 +54,28 @@ console.log(customFormat)  // => "⏰1h ⏱️1m ⏲️1s"
 ::: info fractionDigits 的影响
 `SmartUnit`为最小的单位保留了小数，其他单位不显示小数，也就不受`fractionDigits`配置的影响。
 :::
+
+## 反向解析
+
+```ts
+import SmartUnit from 'smart-unit'
+
+const time = new SmartUnit(['ms', 1000, 's', 60, 'm', 60, 'h'])
+
+console.log(time.parseChain('1h1m1s'))      // => 3661000
+console.log(time.parseChain('1h:1m:1s', ':'))      // => 3661000
+```
+
+使用 [`parseChain`](../api/index.md#parsechain) 方法将链式单位字符串解析回原始值。这个方法会考虑到分隔符。
+最好在初始化的时候指定分隔符，这样就不用在每次解析时都指定分隔符了。
+
+如果只是想分割数值和单位，可以使用 [`splitChainUnit`](../api/index.md#splitchainunit) 方法，它将返回一个包含数值和单位的数组，而不会计算原始值。
+
+:::info 国际化支持
+反向解析支持国际化的字符串，使用国际化后，只有使用特定语言的字符串才能被正确解析。原始单位将不再被识别。
+:::
+
+:::warning 注意
+反向解析只支持使用[`formatChain`](../api/index.md#formatchain)方法生成或与之兼容的字符串。
+如果是使用[`getChainUnit`](../api/index.md#splitchainunit)获取单位然后手动格式化，通常不支持。
+:::

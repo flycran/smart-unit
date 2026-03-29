@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest'
 import SmartUnit, { ERROR_NAN_INPUT } from '../src'
 
 describe('Error handling tests', () => {
+  const su = new SmartUnit(['mm', 10, 'cm'])
   // 未提供有效的单位集
   describe('Invalid units configuration', () => {
     it('should throw an error if units array is empty', () => {
@@ -12,13 +13,13 @@ describe('Error handling tests', () => {
   // 非法的单位集
   describe('Invalid units configuration', () => {
     it('should throw an error if units array length is odd', () => {
-      expect(() => new SmartUnit(['mm', 'cm'])).toThrow('The unit setting is incorrect; the element at index [1] should be of numeric type.')
+      expect(() => new SmartUnit(['mm', 'cm'])).toThrow(
+        'The unit setting is incorrect; the element at index [1] should be of numeric type.',
+      )
     })
   })
 
   describe('getUnit', () => {
-    const su = new SmartUnit(['mm', 10, 'cm'])
-
     // 意外的NaN输入
     it('should throw error for unintentional NaN input', () => {
       expect(() => su.getUnit(NaN)).toThrow(ERROR_NAN_INPUT)
@@ -26,8 +27,6 @@ describe('Error handling tests', () => {
   })
 
   describe('fromUnit', () => {
-    const su = new SmartUnit(['mm', 10, 'cm'])
-
     // 意外的NaN输入
     it('should throw error for unintentional NaN input', () => {
       expect(() => su.toBase(NaN, 'mm')).toThrow(ERROR_NAN_INPUT)
@@ -41,36 +40,60 @@ describe('Error handling tests', () => {
   })
 
   describe('splitUnit', () => {
-    const su = new SmartUnit(['mm', 10, 'cm'])
-
     // 无效的单位
     it('should throw error for invalid unit', () => {
       expect(() => su.splitUnit('123invalid')).toThrow('Undefined unit: "123invalid".')
+      expect(() => su.splitUnit('')).toThrow('Undefined unit: "".')
+    })
+    // 无效的数值
+    it('should throw error for invalid number', () => {
+      expect(() => su.splitUnit('invalidmm')).toThrow('Invalid number: "invalid".')
     })
   })
 
-  // 字符串解析错误测试
-  describe('String parsing error tests', () => {
+  // 无效的单位
+  describe('Chain unit', () => {
+    it('should handle empty string', () => {
+      expect(() => su.splitChainUnit('123invalid')).toThrow('Undefined unit: "123invalid".')
+      expect(() => su.splitChainUnit('')).toThrow('Undefined unit: "".')
+    })
+    // 无效的数值
+    it('should throw error for invalid number', () => {
+      expect(() => su.splitChainUnit('invalidmm')).toThrow('Invalid number: "invalid".')
+    })
+  })
+
+  // 字符串解析错误
+  describe('String parsing error', () => {
     const su = new SmartUnit(['mm', 10, 'cm', 100, 'm'])
 
     // 无效单位字符串
     it('should throw error for invalid unit in string', () => {
       expect(() => su.parse('100invalid')).toThrow('Undefined unit: "100invalid".')
-    })
-
-    // 纯数字字符串
-    it('should throw error for number-only string', () => {
       expect(() => su.parse('100')).toThrow('Undefined unit: "100".')
-    })
-
-    // 空字符串
-    it('should throw error for empty string', () => {
       expect(() => su.parse('')).toThrow('Undefined unit: "".')
     })
 
     // 无效的数值
     it('should throw error for invalid number', () => {
       expect(() => su.parse('invalidmm')).toThrow('Invalid number: "invalid".')
+    })
+  })
+
+  // 链式单位解析错误
+  describe('Chain unit parsing error', () => {
+    const su = new SmartUnit(['mm', 10, 'cm', 100, 'm'])
+
+    // 无效单位字符串
+    it('should throw error for invalid unit in string', () => {
+      expect(() => su.parseChain('100invalid')).toThrow('Undefined unit: "100invalid".')
+      expect(() => su.parseChain('100')).toThrow('Undefined unit: "100".')
+      expect(() => su.parseChain('')).toThrow('Undefined unit: "".')
+    })
+    // 无效的数值
+    it('should throw error for invalid number', () => {
+      expect(() => su.parseChain('invalidmm')).toThrow('Invalid number: "invalid".')
+      expect(() => su.parseChain('10cminvalidmm')).toThrow('Invalid number: "invalid".')
     })
   })
 })

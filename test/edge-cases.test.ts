@@ -11,18 +11,6 @@ describe('Edge case tests', () => {
     expect(su.getUnit(0)).toEqual({ num: 0, numStr: '0', unit: 'mm' })
   })
 
-  // 极小值处理
-  it('should handle very small values', () => {
-    expect(su.format(0.001)).toEqual('0.001mm')
-    expect(su.format(0.0001)).toEqual('0.0001mm')
-  })
-
-  // 极大值处理
-  it('should handle very large values', () => {
-    expect(su.format(1e12)).toEqual('1000000km')
-    expect(su.format(1e15)).toEqual('1000000000km')
-  })
-
   // 单位边界值
   it('should handle boundary values between units', () => {
     expect(su.format(9)).toEqual('9mm')

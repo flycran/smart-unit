@@ -46,19 +46,9 @@
 
 ## 方法
 
-### `format(num, fractionDigits?)`
+### format
 
-将数值格式化为最优单位的字符串。
-
-#### 参数
-
-- **num** `number` 或者 [`NumPrecision`](./interface.md#numprecision) (仅高精度模式下)
-
-**fractionDigits** [`FractionDigits`](./interface.md#fractiondigits) (可选) 小数位数，默认为 `options.fractionDigits`
-
-### `getUnit(num, fractionDigits?)`
-
-如果想高度自定义格式，可以使用 `getUnit` 方法获取到计算结果后按照任意方式格式化。
+`format(num, fractionDigits?)` 将数值格式化为最优单位的字符串。
 
 #### 参数
 
@@ -66,13 +56,9 @@
 
 **fractionDigits** [`FractionDigits`](./interface.md#fractiondigits) (可选) 小数位数，默认为 `options.fractionDigits`
 
-#### 返回值
+### formatChain
 
-[`FormattedValue`](./interface.md#formattedvalue)
-
-### `formatChain(num, separator?)`
-
-将数值格式化为多个单位的组合字符串，例如 "1h1m1s".
+`formatChain(num, separator?)` 将数值格式化为多个单位的组合字符串，例如 "1h1m1s"。
 
 #### 参数
 
@@ -84,9 +70,23 @@
 
 `string`
 
-### `getChainUnit(num)`
+### getUnit
 
-如果想高度自定义格式，可以使用 `getChainUnit` 方法获取到计算结果后按照任意方式格式化。
+`getUnit(num, fractionDigits?)` 如果想高度自定义格式，可以使用 `getUnit` 方法获取到计算结果后按照任意方式格式化。
+
+#### 参数
+
+- **num** `number` 或者 [`NumPrecision`](./interface.md#numprecision) (仅高精度模式下)
+
+**fractionDigits** [`FractionDigits`](./interface.md#fractiondigits) (可选) 小数位数，默认为 `options.fractionDigits`
+
+#### 返回值
+
+[`FormattedValue`](./interface.md#formattedvalue)
+
+### getChainUnit
+
+`getChainUnit(num)` 如果想高度自定义格式，可以使用 `getChainUnit` 方法获取到计算结果后按照任意方式格式化。
 
 #### 参数
 
@@ -96,9 +96,9 @@
 
 [`FormattedValue[]`](./interface.md#formattedvalue)
 
-### `parse(str)`
+### parse
 
-将带单位的字符串解析为基础单位的数值。
+`parse(str)` 将带单位的字符串解析为基础单位的数值。
 
 #### 参数
 
@@ -108,10 +108,23 @@
 
 `number` 或者 `Decimal` (仅高精度模式下)
 
+### parseChain
 
-### `toBase(num, unit)`
+`parseChain(str, separator?)` 将带单位的字符串解析为基础单位的数值。
 
-将指定单位的值转换为基础单位。
+#### 参数
+
+- **str** `string` 待解析的字符串
+
+- **separator** `string` (可选) 分隔符，默认为 `options.separator`
+
+#### 返回值
+
+`number` 或者 `Decimal` (仅高精度模式下)
+
+### toBase
+
+`toBase(num, unit)` 将指定单位的值转换为基础单位。
 
 #### 参数
 
@@ -123,9 +136,9 @@
 
 `number` 或者 `Decimal` (仅高精度模式下)
 
-### `splitUnit(str)`
+### splitUnit
 
-从格式化字符串中提取数值和单位。
+`splitUnit(str)` 从格式化字符串中提取数值和单位。
 
 #### 参数
 
@@ -135,9 +148,23 @@
 
 [`FormattedValue`](./interface.md#formattedvalue)
 
-### `fromUnitFormat(num, unit, fractionDigits?)`
+### splitChainUnit
 
-从一种单位转换到最优单位并格式化。
+`splitChainUnit(str, separator)` 将链式单位字符串分割成数值和单位。
+
+#### 参数
+
+- **str** `string` 待解析的字符串
+
+- **separator** `string` 分隔符
+
+#### 返回值
+
+[`FormattedValue[]`](./interface.md#formattedvalue)
+
+### fromUnitFormat
+
+`fromUnitFormat(num, unit, fractionDigits?)` 从一种单位转换到最优单位并格式化。
 
 #### 参数
 
@@ -151,9 +178,9 @@
 
 `string`
 
-### `formatNumber(num, fractionDigits?)`
+### formatNumber
 
-将数值按照指定小数位数格式化。
+`formatNumber(num, fractionDigits?)` 将数值按照指定小数位数格式化。
 
 #### 参数
 
@@ -167,22 +194,22 @@
 
 ## 属性
 
-### threshold: `number`
+### threshold
 
-上升换单位的阈值，只读。
+`number` 上升换单位的阈值，只读。
 
-### separator: `string`
+### separator
 
-分隔符，只读。
+`string` 分隔符，只读。
 
-### fractionDigits: [`FractionDigits`](./interface.md#fractiondigits)
+### fractionDigits
 
-小数位数，只读。
+[`FractionDigits`](./interface.md#fractiondigits) 小数位数，只读。
 
-### unitNames: `string[]`
+### unitNames
 
-单位名称，只读。
+`string[]` 单位名称，只读。
 
-### unitDigits: `number[]`
+### unitDigits
 
-单位比例，只读。
+`number[]` 单位比例，只读。

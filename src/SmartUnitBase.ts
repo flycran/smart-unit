@@ -20,6 +20,8 @@ export abstract class SmartUnitBase<U extends string = string, D extends boolean
     if (!this._sortedUnitNames) this.createSortedUnitNames()
     return this._sortedUnitNames
   }
+
+  /** Unit conversion function */
   public convert?: (str: U) => string
 
   constructor(units: (U | number)[], option: SmartUnitOptions = {}) {
@@ -126,12 +128,6 @@ export abstract class SmartUnitBase<U extends string = string, D extends boolean
   abstract format(num: InputNumber, fractionDigits?: FractionDigits): string
 
   // 根据输入数值获取链式单位数组
-  /**
-   * Gets the chain of units for the input number
-   *
-   * @param num - The input number to determine the chain for
-   * @returns An array of FormattedValue objects representing the chain of units
-   */
   abstract getChainUnit(num: InputNumber): FormattedValue<U>[]
 
   protected _formatChain(chain: FormattedValue<U>[], separator = this.separator) {
@@ -139,24 +135,12 @@ export abstract class SmartUnitBase<U extends string = string, D extends boolean
   }
 
   // 将数字格式化为链式单位字符串
-  /**
-   * Formats a number as a chain of units string
-   * @param num - The input number to format
-   * @returns The formatted chain string
-   */
   formatChain(num: InputNumber, separator = this.separator): string {
     const chain = this.getChainUnit(num)
     return this._formatChain(chain, separator)
   }
 
   // 将给定数值从指定单位转换为基本单位
-  /**
-   * Converts a value from the specified unit to the base unit
-   *
-   * @param num - The number to convert
-   * @param unit - The original unit of the number
-   * @returns The converted value in base unit
-   */
   abstract toBase(num: InputNumber, unit: U): D extends true ? Decimal : number
 
   // 从给定字符串中分离出数字部分和单位
@@ -171,8 +155,9 @@ export abstract class SmartUnitBase<U extends string = string, D extends boolean
     const sortedUnits = this.sortedUnitNames
 
     for (const unit of sortedUnits) {
-      if (str.endsWith(unit as string)) {
-        const numStr = str.slice(0, -unit.length)
+      const matchUnit = this.convert ? this.convert(unit) : unit
+      if (str.endsWith(matchUnit)) {
+        const numStr = str.slice(0, -matchUnit.length)
         const num = +numStr
         if (Number.isNaN(num)) throw new Error(`Invalid number: "${numStr}".`)
         return {
@@ -186,23 +171,48 @@ export abstract class SmartUnitBase<U extends string = string, D extends boolean
     throw new Error(`Undefined unit: "${str}".`)
   }
 
-  // 将带单位的值转换为基础单位的数值
+  // 从给定链式单位字符串中分离出数字部分和单位
   /**
-   * Parses a string with unit into a base unit numeric value
+   * Splits a string into its numeric part and unit
    *
-   * @param str - Input string containing a number and unit
-   * @returns The value converted to base unit
+   * @param str - Input string containing a number followed by a unit
+   * @returns An object containing the numeric value, unit, and Decimal instance
+   * @throws An error if no predefined unit is matched
    */
+  splitChainUnit(str: string, separator: string = this.separator): FormattedValue<U>[] {
+    const results: FormattedValue<U>[] = []
+    const sortedUnits = this.sortedUnitNames
+
+    const strLen = str.length
+    let start = 0
+    for (let i = 0; i < strLen; i++) {
+      for (const unit of sortedUnits) {
+        const matchUnit = this.convert ? this.convert(unit) : unit
+        if (str.slice(i, i + matchUnit.length) === matchUnit) {
+          const numStr = str.slice(start, i)
+          const num = +numStr
+          if (Number.isNaN(num)) throw new Error(`Invalid number: "${numStr}".`)
+          results.push({
+            num,
+            unit,
+            numStr,
+          })
+          i += matchUnit.length + separator.length
+          start = i
+          break
+        }
+      }
+    }
+    if (results.length > 0) return results
+    throw new Error(`Undefined unit: "${str}".`)
+  }
+
+  // 将带单位的字符串转换为基础单位的数值
   abstract parse(str: string): D extends true ? Decimal : number
 
+  // 将带链式单位的字符串转换为基础单位的数值
+  abstract parseChain(str: string): D extends true ? Decimal : number
+
   // 将给定数值从原单位转换为最佳单位，并可指定小数精度
-  /**
-   * Converts a value from the original unit to the optimal unit with optional decimal precision
-   *
-   * @param num - The number to convert
-   * @param unit - The original unit
-   * @param fractionDigits - Optional decimal places for formatting output
-   * @returns The converted number as a formatted string
-   */
   abstract fromUnitFormat(num: InputNumber, unit: U, fractionDigits?: FractionDigits): string
 }

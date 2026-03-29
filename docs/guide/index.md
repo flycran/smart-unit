@@ -43,6 +43,15 @@ size.parse('1.5KB')  // => 1536
 size.parse('2MB')    // => 2097152
 ```
 
+:::info 国际化支持
+反向解析支持国际化的字符串，使用国际化后，只有使用特定语言的字符串才能被正确解析。原始单位将不再被识别。
+:::
+
+:::warning 注意
+反向解析只支持使用[`format`](../api/index.md#format)方法生成或与之兼容的字符串。
+如果是使用[`getUnit`](../api/index.md#getunit)获取单位然后手动格式化，通常不支持。
+:::
+
 ## 核心概念
 
 ### 单位数组
@@ -66,6 +75,7 @@ new SmartUnit(units, {
   baseDigit: 1024,        // 自动生成比例
   threshold: 1,           // 单位切换阈值
   fractionDigits: 2,      // 小数位数
+  separator: ' ',         // 分隔符，仅用于`formatChain`方法
   decimalOptions: {},     // Decimal.js 配置 (仅在高精度模式下有效)
 })
 ```

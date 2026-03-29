@@ -6,10 +6,11 @@
 
 ```ts
 interface SmartUnitOptions {
-  baseDigit?: number          // 自动生成比例
-  threshold?: number          // 单位切换阈值（默认：1）
-  fractionDigits?: number | string  // 小数位数
-  decimalOptions?: object     // Decimal.js 配置 只在高精度模式下有效
+  baseDigit?: number              // 自动生成比例
+  threshold?: number              // 单位切换阈值（默认：1）
+  fractionDigits?: FractionDigits // 小数位数
+  separator: string,              // 分隔符，仅用于`formatChain`方法
+  decimalOptions?: object         // Decimal.js 配置 只在高精度模式下有效
 }
 ```
 
@@ -21,7 +22,7 @@ interface SmartUnitOptions {
 interface FormattedValue<U extends string> {
   num: number           // 数值
   unit: U               // 单位
-  numStr: string       // 格式化后的数字字符串
+  numStr: string        // 格式化后的数字字符串
   decimal?: Decimal     // Decimal 实例（仅高精度模式）
 }
 ```
@@ -32,14 +33,15 @@ interface FormattedValue<U extends string> {
 
 ```ts
 type FractionDigits =
-  | number              // 固定小数位
-  | `-${number}`        // 只设置最大值
-  | `${number}-`        // 只设置最小值
-  | `${number}-${number}`  // 设置范围
-  | undefined
+  | number                // 固定小数位
+  | `-${number}`          // 只设置最大值
+  | `${number}-`          // 只设置最小值
+  | `${number}-${number}` // 设置范围
 ```
 
 ## NumPrecision
+
+表示高精度模式下支持的输入类型。
 
 ```ts
 type NumPrecision = Num | string | bigint | Decimal

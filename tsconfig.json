@@ -11,13 +11,19 @@
     "skipLibCheck": true,
     "strictNullChecks": false,
     "noImplicitAny": false,
-    "forceConsistentCasingInFileNames": false
+    "forceConsistentCasingInFileNames": false,
+    "noEmit": true,
+    "outDir": "src"
   },
   "include": [
-    "src/**/*",
-    "test/**/*",
-    "docs/.vitepress/**/*",
-    "vitest.config.ts",
-    "scripts/**/*"
+    "src/**/*"
   ],
+  "references": [
+    {
+      "path": "./tsconfig.node.json"
+    },
+    {
+      "path": "./tsconfig.test.json"
+    }
+  ]
 }

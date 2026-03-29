@@ -85,7 +85,7 @@ export class SmartUnitPrecision<U extends string = string> extends SmartUnitBase
   // 根据输入数值获取链式单位数组
   /**
    * Gets the chain of units for the input number
-   * 
+   *
    * @param num - The input number to determine the chain for
    * @returns An array of FormattedValue objects representing the chain of units
    */
@@ -130,7 +130,7 @@ export class SmartUnitPrecision<U extends string = string> extends SmartUnitBase
   // 将数字格式化为链式单位字符串
   /**
    * Formats a number as a chain of units string
-   * 
+   *
    * @param num - The input number to format
    * @returns The formatted chain string
    */
@@ -186,6 +186,21 @@ export class SmartUnitPrecision<U extends string = string> extends SmartUnitBase
     }
   }
 
+  // 从给定链式单位字符串中分离出数字部分和单位
+  /**
+   * Splits a string into its numeric part and unit
+   *
+   * @param str - Input string containing a number followed by a unit
+   * @returns An object containing the numeric value, unit, and Decimal instance
+   * @throws An error if no predefined unit is matched
+   */
+  splitChainUnit(str: string, separator = this.separator): FormattedValuePrecision<U>[] {
+    return super.splitChainUnit(str, separator).map((unit) => ({
+      ...unit,
+      decimal: new this.DecimalClass(unit.numStr),
+    }))
+  }
+
   // 将带单位的值转换为基础单位的数值
   /**
    * Parses a string with unit into a base unit numeric value
@@ -196,6 +211,22 @@ export class SmartUnitPrecision<U extends string = string> extends SmartUnitBase
   parse(str: string): Decimal {
     const { decimal, unit } = this.splitUnit(str)
     return this.toBase(decimal, unit)
+  }
+
+  // 将带链式单位的字符串转换为基础单位的数值
+  /**
+   * Parses a string with chain units into a base unit numeric value
+   *
+   * @param str - Input string containing a number and unit
+   * @returns The value converted to base unit
+   */
+  parseChain(str: string): Decimal {
+    const units = this.splitChainUnit(str)
+    let sum = new this.DecimalClass(0)
+    for (const unit of units) {
+      sum = sum.plus(this.toBase(unit.num, unit.unit))
+    }
+    return sum
   }
 
   // 将给定数值从原单位转换为最佳单位，并可指定小数精度

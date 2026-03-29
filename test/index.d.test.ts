@@ -35,7 +35,7 @@ describe('Type Safety Tests', () => {
       assertType<FractionDigits>(1)
       assertType<FractionDigits>('1-')
       assertType<FractionDigits>('-3')
-      assertType<FractionDigits>('1-3')
+      assertType<FractionDigits>('1-3aa')
     })
 
     it('should reject invalid fractionDigits', () => {
@@ -65,7 +65,7 @@ describe('Type Safety Tests', () => {
       expectTypeOf<typeof chainUnit>().toExtend<FormattedValuePrecision<any>[]>()
     })
 
-    it('', () => {
+    it('should return non-FormattedValuePrecision types for SmartUnit', () => {
       const su = new SmartUnit(['ms', 1000, 's'])
 
       const base = su.toBase(1500, 's')
@@ -75,7 +75,7 @@ describe('Type Safety Tests', () => {
       expectTypeOf<typeof parsed>().toEqualTypeOf<number>()
     })
 
-    it('', () => {
+    it('should return non-FormattedValuePrecision types for SmartUnitPrecision', () => {
       const su = new SmartUnitPrecision(['ms', 1000, 's'])
 
       const base = su.toBase(1500, 's')
