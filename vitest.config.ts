@@ -1,7 +1,10 @@
-/** @type {import('ts-jest').JestConfigWithTsJest} **/
-module.exports = {
-  testEnvironment: "node",
-  transform: {
-    "^.+\.tsx?$": ["ts-jest",{}],
-  },
-};
+import { defineConfig } from 'vitest/config'
+
+export default defineConfig({
+  test: {
+    typecheck: {
+      enabled: true,
+      include: ['test/*.type.test.ts']
+    }
+  }
+})

@@ -1,5 +1,5 @@
-import { describe, expect, it } from 'vitest';
-import SmartUnit from '../src';
+import { describe, expect, it } from 'vitest'
+import SmartUnit from '../src'
 
 // fromUnitFormat 方法测试
 describe('fromUnitFormat method tests', () => {

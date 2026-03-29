@@ -1,5 +1,5 @@
-import { describe, expect, it } from 'vitest';
-import SmartUnit from '../src';
+import { describe, expect, it } from 'vitest'
+import SmartUnit from '../src'
 
 // 阈值测试
 describe('Threshold tests', () => {
@@ -12,14 +12,20 @@ describe('Threshold tests', () => {
 
   // 自定义阈值为0.5，超过一半进制倍数时进位
   it('should use custom threshold of 0.5', () => {
-    const su = new SmartUnit(['B', 'KB', 'MB'], { baseDigit: 1024, threshold: 0.5 })
+    const su = new SmartUnit(['B', 'KB', 'MB'], {
+      baseDigit: 1024,
+      threshold: 0.5,
+    })
     expect(su.format(512)).toEqual('0.5KB')
     expect(su.format(511)).toEqual('511B')
   })
 
   // 阈值为2，需要两倍进制倍数才进位
   it('should use custom threshold of 2', () => {
-    const su = new SmartUnit(['B', 'KB', 'MB'], { baseDigit: 1024, threshold: 2 })
+    const su = new SmartUnit(['B', 'KB', 'MB'], {
+      baseDigit: 1024,
+      threshold: 2,
+    })
     expect(su.format(2048)).toEqual('2KB')
     expect(su.format(2047)).toEqual('2047B')
   })

@@ -1,0 +1,480 @@
+/**
+ * Crane VitePress Theme
+ * VSCode-inspired base with Crane brand colors
+ * Supports light / dark mode
+ */
+
+/* Import fonts */
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&display=swap');
+
+/* ============================================================
+   Design Tokens
+   ============================================================ */
+:root {
+  /* --- Crane Brand --- */
+  --crane-orange: #ffb22f;
+  --crane-green:  #21d486;
+  --crane-blue:   #00abff;
+  --crane-red:    #fb658b;
+
+  /* --- VitePress overrides (light) --- */
+  /* Primary → Crane Blue */
+  --vp-c-brand-1: #00abff;
+  --vp-c-brand-2: #0090d6;
+  --vp-c-brand-3: #007ab8;
+  --vp-c-brand-soft: rgba(0, 171, 255, 0.12);
+
+  /* Background hierarchy – VSCode Light */
+  --vp-c-bg:          #ffffff;
+  --vp-c-bg-soft:     #f3f3f3;
+  --vp-c-bg-mute:     #e8e8e8;
+  --vp-c-bg-elv:      #ffffff;
+  --vp-c-bg-alt:      #f3f3f3;
+
+  /* Border */
+  --vp-c-border:       #e0e0e0;
+  --vp-c-divider:      #e8e8e8;
+  --vp-c-gutter:       #e0e0e0;
+
+  /* Text – VSCode Light palette */
+  --vp-c-text-1: #1e1e1e;
+  --vp-c-text-2: #4e4e4e;
+  --vp-c-text-3: #888888;
+
+  /* Sidebar */
+  --vp-sidebar-bg-color: #f3f3f3;
+  --vp-c-sidebar-bg: #f3f3f3;
+
+  /* Nav */
+  --vp-nav-bg-color: rgba(255,255,255,0.95);
+  --vp-nav-screen-bg-color: #f3f3f3;
+
+  /* Code block – VSCode Light+ */
+  --vp-code-block-bg:               #f8f8f8;
+  --vp-code-block-color:            #1e1e1e;
+  --vp-code-line-highlight-color:   rgba(255, 178, 47, 0.12);
+  --vp-code-lang-color:             #999999;
+  --vp-code-copy-code-bg:           #ececec;
+  --vp-code-copy-code-hover-bg:     #e0e0e0;
+
+  /* Inline code */
+  --vp-code-color:    #d16969;
+  --vp-code-bg:       #efefef;
+
+  /* Tip / warning / danger callout colors */
+  --vp-custom-block-tip-border:   var(--crane-green);
+  --vp-custom-block-tip-text:     #1e6640;
+  --vp-custom-block-tip-bg:       rgba(33, 212, 134, 0.08);
+  --vp-custom-block-tip-code-bg:  rgba(33, 212, 134, 0.12);
+
+  --vp-custom-block-warning-border: var(--crane-orange);
+  --vp-custom-block-warning-text:   #7a5800;
+  --vp-custom-block-warning-bg:     rgba(255, 178, 47, 0.08);
+
+  --vp-custom-block-danger-border:  var(--crane-red);
+  --vp-custom-block-danger-text:    #8b0021;
+  --vp-custom-block-danger-bg:      rgba(251, 101, 139, 0.08);
+
+  --vp-custom-block-info-border:    var(--crane-blue);
+  --vp-custom-block-info-text:      #004f7a;
+  --vp-custom-block-info-bg:        rgba(0, 171, 255, 0.08);
+
+  /* Button */
+  --vp-button-brand-bg:          var(--crane-blue);
+  --vp-button-brand-hover-bg:    #0090d6;
+  --vp-button-brand-text:        #ffffff;
+  --vp-button-brand-hover-text:  #ffffff;
+
+  --vp-button-alt-bg:            #e8e8e8;
+  --vp-button-alt-hover-bg:      #d4d4d4;
+  --vp-button-alt-text:          #1e1e1e;
+
+  /* Home hero gradient */
+  --vp-home-hero-name-color: transparent;
+  --vp-home-hero-name-background: linear-gradient(
+    135deg,
+    var(--crane-blue) 0%,
+    var(--crane-green) 50%,
+    var(--crane-orange) 100%
+  );
+  --vp-home-hero-image-background-image: radial-gradient(
+    ellipse at 60% 50%,
+    rgba(0, 171, 255, 0.20) 0%,
+    rgba(33, 212, 134, 0.15) 40%,
+    transparent 70%
+  );
+  --vp-home-hero-image-filter: blur(48px);
+}
+
+/* ============================================================
+   Dark Mode
+   ============================================================ */
+.dark {
+  /* Primary */
+  --vp-c-brand-1: #00abff;
+  --vp-c-brand-2: #33beff;
+  --vp-c-brand-3: #66d1ff;
+  --vp-c-brand-soft: rgba(0, 171, 255, 0.14);
+
+  /* Background – VSCode Dark+ */
+  --vp-c-bg:          #1e1e1e;
+  --vp-c-bg-soft:     #252526;
+  --vp-c-bg-mute:     #2d2d2d;
+  --vp-c-bg-elv:      #252526;
+  --vp-c-bg-alt:      #181818;
+
+  /* Border */
+  --vp-c-border:   #3c3c3c;
+  --vp-c-divider:  #3c3c3c;
+  --vp-c-gutter:   #3c3c3c;
+
+  /* Text */
+  --vp-c-text-1: #d4d4d4;
+  --vp-c-text-2: #9d9d9d;
+  --vp-c-text-3: #6a6a6a;
+
+  /* Sidebar */
+  --vp-sidebar-bg-color: #252526;
+  --vp-c-sidebar-bg: #252526;
+
+  /* Nav */
+  --vp-nav-bg-color: rgba(30,30,30,0.95);
+  --vp-nav-screen-bg-color: #252526;
+
+  /* Code block */
+  --vp-code-block-bg:           #1a1a1a;
+  --vp-code-line-highlight-color: rgba(255, 178, 47, 0.10);
+  --vp-code-copy-code-bg:       rgba(255, 255, 255, 0.08);
+  --vp-code-copy-code-hover-bg: rgba(255, 255, 255, 0.14);
+
+  /* Inline code */
+  --vp-code-color: #ce9178;
+  --vp-code-bg:    #2d2d2d;
+
+  /* Callouts */
+  --vp-custom-block-tip-text:     #21d486;
+  --vp-custom-block-tip-bg:       rgba(33, 212, 134, 0.10);
+  --vp-custom-block-tip-code-bg:  rgba(33, 212, 134, 0.15);
+
+  --vp-custom-block-warning-text:   #ffb22f;
+  --vp-custom-block-warning-bg:     rgba(255, 178, 47, 0.10);
+
+  --vp-custom-block-danger-text:    #fb658b;
+  --vp-custom-block-danger-bg:      rgba(251, 101, 139, 0.10);
+
+  --vp-custom-block-info-text:      #00abff;
+  --vp-custom-block-info-bg:        rgba(0, 171, 255, 0.10);
+
+  /* Button */
+  --vp-button-alt-bg:       #2d2d2d;
+  --vp-button-alt-hover-bg: #3c3c3c;
+  --vp-button-alt-text:     #d4d4d4;
+
+  /* Hero */
+  --vp-home-hero-image-background-image: radial-gradient(
+    ellipse at 60% 50%,
+    rgba(0, 171, 255, 0.25) 0%,
+    rgba(33, 212, 134, 0.18) 40%,
+    transparent 70%
+  );
+}
+
+/* ============================================================
+   Typography
+   ============================================================ */
+:root {
+  --vp-font-family-base:  'JetBrains Mono', 'Fira Code', 'Cascadia Code', monospace;
+  --vp-font-family-mono:  'JetBrains Mono', 'Fira Code', monospace;
+}
+
+/* ============================================================
+   Nav Bar
+   ============================================================ */
+.VPNav {
+  border-bottom: 1px solid var(--vp-c-border) !important;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+/* Logo accent dot */
+.VPNavBarTitle .title::after {
+  content: '';
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--crane-orange);
+  margin-left: 4px;
+  vertical-align: middle;
+  margin-bottom: 2px;
+}
+
+/* Active nav link underline */
+.VPNavBarMenuLink.active,
+.VPNavBarMenuLink:hover {
+  color: var(--crane-blue) !important;
+}
+
+/* ============================================================
+   Sidebar
+   ============================================================ */
+/* 激活项文字 */
+.VPSidebarItem.is-active > .item .text,
+.VPSidebarItem.is-active > .item .link-text {
+  color: var(--crane-blue) !important;
+  font-weight: 600;
+}
+
+/* VitePress 侧边栏激活竖条 */
+.VPSidebarItem.is-active > .item .indicator {
+  background-color: var(--crane-blue) !important;
+}
+
+/* Sidebar section headers */
+.VPSidebarItem.level-1 > .item .text {
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--vp-c-text-3);
+}
+
+/* ============================================================
+   Content
+   ============================================================ */
+
+/* Headings: left accent bar */
+.vp-doc h1,
+.vp-doc h2 {
+  position: relative;
+}
+
+.vp-doc h1::before {
+  content: '';
+  display: inline-block;
+  width: 4px;
+  height: 0.85em;
+  background: linear-gradient(180deg, var(--crane-blue), var(--crane-green));
+  border-radius: 2px;
+  margin-right: 10px;
+  vertical-align: middle;
+}
+
+.vp-doc h2 {
+  border-top: 1px solid var(--vp-c-divider);
+  padding-top: 1.2rem;
+}
+
+.vp-doc h2::before {
+  content: '';
+  display: inline-block;
+  width: 3px;
+  height: 0.8em;
+  background: var(--crane-orange);
+  border-radius: 2px;
+  margin-right: 8px;
+  vertical-align: middle;
+}
+
+.vp-doc h3::before {
+  content: '// ';
+  color: var(--crane-green);
+  font-weight: 400;
+  opacity: 0.8;
+}
+
+/* Links */
+.vp-doc a {
+  color: var(--crane-blue);
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+  transition: border-color 0.2s, color 0.2s;
+}
+.vp-doc a:hover {
+  color: var(--crane-blue);
+  border-bottom-color: var(--crane-blue);
+}
+
+/* Inline code */
+.vp-doc :not(pre) > code {
+  background: var(--vp-code-bg);
+  color: var(--vp-code-color);
+  border: 1px solid var(--vp-c-border);
+  border-radius: 3px;
+  font-size: 0.875em;
+  padding: 2px 5px;
+}
+
+/* Code blocks */
+.vp-doc div[class*='language-'] {
+  border: 1px solid var(--vp-c-border);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+/* Language badge */
+.vp-doc div[class*='language-'] > span.lang {
+  color: var(--crane-orange);
+  font-size: 0.7rem;
+  letter-spacing: 0.06em;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+
+
+/* Blockquote */
+.vp-doc blockquote {
+  border-left: 3px solid var(--crane-blue);
+  background: var(--vp-c-bg-soft);
+  color: var(--vp-c-text-2);
+  padding: 12px 20px;
+  border-radius: 0 6px 6px 0;
+}
+
+/* Table */
+.vp-doc table {
+  border-collapse: collapse;
+  border-spacing: 0;
+  width: 100%;
+}
+.vp-doc table th {
+  background: var(--vp-c-bg-soft);
+  color: var(--crane-blue);
+  font-size: 0.8rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  border-bottom: 2px solid var(--crane-blue);
+}
+.vp-doc table tr:hover td {
+  background: rgba(0, 171, 255, 0.04);
+}
+
+/* ============================================================
+   Badge
+   ============================================================ */
+.VPBadge.tip     { background: rgba(33, 212, 134, 0.15); color: var(--crane-green); border: 1px solid var(--crane-green); }
+.VPBadge.warning { background: rgba(255, 178, 47, 0.15); color: var(--crane-orange); border: 1px solid var(--crane-orange); }
+.VPBadge.danger  { background: rgba(251, 101, 139, 0.15); color: var(--crane-red); border: 1px solid var(--crane-red); }
+.VPBadge.info    { background: rgba(0, 171, 255, 0.15); color: var(--crane-blue); border: 1px solid var(--crane-blue); }
+
+/* ============================================================
+   Home Page Hero
+   ============================================================ */
+.VPHero .name {
+  font-size: clamp(2.5rem, 6vw, 4rem) !important;
+  letter-spacing: -0.03em;
+  font-weight: 800;
+}
+
+.VPHero .tagline {
+  color: var(--vp-c-text-2) !important;
+  font-size: clamp(1rem, 2vw, 1.2rem) !important;
+}
+
+/* CTA buttons */
+.VPButton.brand {
+  background: var(--crane-blue) !important;
+  border-color: var(--crane-blue) !important;
+  box-shadow: 0 0 20px rgba(0, 171, 255, 0.25);
+  transition: box-shadow 0.2s, transform 0.2s !important;
+}
+.VPButton.brand:hover {
+  box-shadow: 0 0 30px rgba(0, 171, 255, 0.40);
+  transform: translateY(-1px);
+}
+
+.VPButton.alt {
+  border-color: var(--vp-c-border) !important;
+}
+
+/* ============================================================
+   Home Features
+   ============================================================ */
+.VPFeature {
+  border: 1px solid var(--vp-c-border) !important;
+  background: var(--vp-c-bg-soft) !important;
+  border-radius: 10px !important;
+  transition: border-color 0.2s, box-shadow 0.2s, transform 0.2s !important;
+}
+.VPFeature:hover {
+  border-color: var(--crane-blue) !important;
+  box-shadow: 0 4px 24px rgba(0, 171, 255, 0.12);
+  transform: translateY(-2px);
+}
+
+/* Cycle feature icon colors */
+.VPFeatures .VPFeature:nth-child(4n+1) .icon { color: var(--crane-blue); }
+.VPFeatures .VPFeature:nth-child(4n+2) .icon { color: var(--crane-green); }
+.VPFeatures .VPFeature:nth-child(4n+3) .icon { color: var(--crane-orange); }
+.VPFeatures .VPFeature:nth-child(4n+4) .icon { color: var(--crane-red); }
+
+.VPFeature .title {
+  font-weight: 700 !important;
+  letter-spacing: -0.01em;
+}
+
+/* ============================================================
+   Aside / TOC
+   ============================================================ */
+/* 右侧 TOC 激活状态使用 VitePress 自带竖线（由 --vp-c-brand-1 驱动），无需额外覆盖 */
+
+/* ============================================================
+   Scrollbar (WebKit)
+   ============================================================ */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--vp-c-border);
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--crane-blue);
+}
+
+/* ============================================================
+   Search
+   ============================================================ */
+/* 用 VitePress 官方 token 控制搜索弹窗样式 */
+:root {
+  --vp-local-search-highlight-color:      var(--crane-blue);
+  --vp-local-search-highlight-text-color: #ffffff;
+}
+.dark {
+  --vp-local-search-highlight-color:      var(--crane-blue);
+  --vp-local-search-highlight-text-color: #ffffff;
+}
+
+/* 去掉搜索框 focus 时的蓝色光晕 */
+.VPLocalSearchBox input {
+  box-shadow: none !important;
+  outline: none !important;
+}
+
+/* ============================================================
+   Misc Utility
+   ============================================================ */
+
+/* Selection */
+::selection {
+  background: rgba(0, 171, 255, 0.25);
+  color: inherit;
+}
+
+/* Focus ring */
+:focus-visible {
+  outline: 2px solid var(--crane-blue);
+  outline-offset: 2px;
+}
+
+/* ============================================================
+   Code block: light mode override
+   ============================================================ */
+html:not(.dark) .vp-doc div[class*='language-'] {
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06);
+}

@@ -8,7 +8,9 @@
 [![test](https://github.com/flycran/smart-unit/workflows/Test/badge.svg)](https://github.com/flycran/smart-unit/actions)
 [![license](https://img.shields.io/npm/l/smart-unit)](./LICENSE)
 
-[English](./README.md) | 中文
+<p align="center">
+  <a href="./README.md">English</a> | 中文 | <a href="https://flycran.github.io/smart-unit">完整文档</a>
+</p>
 
 ---
 
@@ -32,7 +34,7 @@ size.parse('2.5GB');             // 2684354560
 - 🧮 **高精度** — 可选 `decimal.js` 集成，支持任意精度计算
 - 📦 **TypeScript 优先** — 完整的类型安全
 - 🪶 **轻量级** — 核心功能，体积小巧
-- ✅ **测试完善** — 全面的测试套件，100% 覆盖率
+- ✅ **测试完善** — 100+ 测试用例，覆盖各种边缘情况
 
 ## 安装
 
@@ -46,7 +48,7 @@ npm install smart-unit
 
 ## 快速开始
 
-### 文件大小格式化
+### 固定比例单位
 
 ```ts
 import SmartUnit from 'smart-unit';
@@ -59,7 +61,7 @@ fileSize.format(1024 * 1024 * 100);  // => "100MB"
 fileSize.format(1536);               // => "1.5KB"
 ```
 
-### 可变进制长度单位
+### 可变比例单位
 
 ```ts
 const length = new SmartUnit(['mm', 10, 'cm', 100, 'm', 1000, 'km']);
@@ -71,9 +73,10 @@ length.format(1500000);  // => "1.5km"
 ### 高精度与 BigInt 支持
 
 ```ts
-const bigLength = new SmartUnit(
-  ['mm', 10, 'cm', 100, 'm', 1000, 'km', 1000, 'Mm', 1000, 'Gm', 1000, 'Tm'],
-  { useDecimal: true }
+import { SmartUnitPrecision } from 'smart-unit/precision'
+
+const bigLength = new SmartUnitPrecision(
+  ['mm', 10, 'cm', 100, 'm', 1000, 'km', 1000, 'Mm', 1000, 'Gm', 1000, 'Tm']
 );
 
 // 支持 BigInt 和超出 JS 安全整数范围的数值
@@ -89,155 +92,49 @@ time.parse('90s');   // => 90000 (ms)
 time.parse('2.5h');  // => 9000000 (ms)
 ```
 
-## API
-
-### `new SmartUnit(units, options?)`
-
-创建单位转换器实例。
-
-#### 参数
-
-- **units** `(string | number)[]` — 单位名称和转换比例数组
-  - 偶数索引：单位名称（如 `'B'`、`'KB'`）
-  - 奇数索引：到下一单位的转换比例（如 `1024`）
-- **options** `SmartUnitOptions` — 配置对象
-  - `baseDigit?: number` — 自动生成比例（如 `1024` 表示所有步骤）
-  - `threshold?: number` — 单位切换阈值（默认：`1`）
-  - `fractionDigits?: FractionDigits` — 格式化小数位数
-  - `useDecimal?: boolean` — 启用高精度模式
-  - `decimalOptions?: Decimal.Config` — 自定义 decimal.js 配置
-
-#### 方法
-
-##### `.format(num, decimal?)`
-
-将数字格式化为最优单位字符串。
+### 链式单位
 
 ```ts
-const size = new SmartUnit(['B', 'KB', 'MB'], { baseDigit: 1024, fractionDigits: 2 });
+const time = new SmartUnit(['ms', 1000, 's', 60, 'm', 60, 'h']);
 
-size.format(1536);           // => "1.50KB"
-size.format(1536, 0);        // => "2KB"
-size.format(1536, '1-3');    // => "1.5KB"（最少1位，最多3位小数）
+time.formatChain(63000) // => 1m3s
+time.formatChain(3663000);  // => 1h1m3s
 ```
 
-##### `.parse(str)`
-
-将单位字符串解析回基本单位值。
+### 国际化
 
 ```ts
-const size = new SmartUnit(['B', 'KB', 'MB'], { baseDigit: 1024 });
+const i18nMap = {
+  ms: 'ms',
+  s: 'seconds',
+  m: 'minutes',
+  h: 'hours',
+}
+const t = (unit: keyof typeof i18nMap) => i18nMap[unit]
 
-size.parse('1.5KB');  // => 1536
-size.parse('2MB');    // => 2097152
+const timeI18n = new SmartUnit(['ms', 1000, 's', 60, 'm', 60, 'h'], {
+  separator: ' ',
+}).withConvert(t)
+
+timeI18n.formatChain(90000) // 1minutes 30seconds
+timeI18n.formatChain(9000000) // 2hours 30minutes
 ```
 
-##### `.getUnit(num)`
+## 使用 TypeScript
 
-获取最优单位和转换后的值（不进行格式化）。
+SmartUnit拥有完整的类型安全支持，适用于 TypeScript 项目。
 
 ```ts
-const size = new SmartUnit(['B', 'KB', 'MB'], { baseDigit: 1024 });
+import SmartUnit, { type GetUnitNames } from 'smart-unit'
 
-size.getUnit(1536);
-// => { num: 1.5, unit: 'KB' }
+const time = new SmartUnit(['ms', 1000, 's', 60, 'm', 60, 'h'])
+// 使用工具函数导出类型
+type TimeUnits = GetUnitNames<typeof time> // => type TimeUnits = "m" | "ms" | "s" | "h"
 
-// 高精度模式
-const precise = new SmartUnit(['B', 'KB', 1024], { useDecimal: true });
-precise.getUnit(1536);
-// => { num: 1.5, unit: 'KB', decimal: Decimal }
-```
-
-##### `.toBase(num, unit)`
-
-将指定单位的值转换为基本单位。
-
-```ts
-const length = new SmartUnit(['mm', 10, 'cm', 100, 'm']);
-
-length.toBase(1.5, 'm');   // => 1500 (mm)
-length.toBase(100, 'cm');  // => 1000 (mm)
-```
-
-##### `.splitUnit(str)`
-
-从格式化字符串中提取数值和单位。
-
-```ts
-const size = new SmartUnit(['B', 'KB', 'MB'], { baseDigit: 1024 });
-
-size.splitUnit('1.5KB');  // => { num: 1.5, unit: 'KB' }
-```
-
-##### `.fromUnitFormat(num, unit, decimal?)`
-
-从一种单位转换到最优单位并格式化。
-
-```ts
-const length = new SmartUnit(['mm', 10, 'cm', 100, 'm', 1000, 'km']);
-
-length.fromUnitFormat(1500, 'm');  // => "1.5km"
-```
-
-## 使用场景
-
-### 数据传输速率
-
-```ts
-const bitrate = new SmartUnit(['bps', 'Kbps', 'Mbps', 'Gbps'], {
-  baseDigit: 1000,
-  fractionDigits: 1,
-});
-
-bitrate.format(1500000);  // => "1.5Mbps"
-```
-
-### 频率
-
-```ts
-const freq = new SmartUnit(['Hz', 'kHz', 'MHz', 'GHz'], {
-  baseDigit: 1000,
-  fractionDigits: 2,
-});
-
-freq.format(2400000000);  // => "2.40GHz"
-```
-
-### 金融金额（高精度）
-
-```ts
-const currency = new SmartUnit(['', 'K', 'M', 'B', 'T'], {
-  baseDigit: 1000,
-  useDecimal: true,
-  fractionDigits: 2,
-});
-
-currency.format('12345678901234567890');  // => "12345678.90T"
-```
-
-## 测试
-
-运行测试套件：
-
-```bash
-npm test
-```
-
-## TypeScript
-
-smart-unit 使用 TypeScript 编写，提供完整的类型安全。
-
-```ts
-import SmartUnit from 'smart-unit';
-import type { Decimal } from 'decimal.js';
-
-// 普通模式 - 返回 number
-const regular = new SmartUnit(['B', 'KB', 1024]);
-const num: number = regular.parse('1KB');
-
-// 高精度模式 - 返回 Decimal
-const precise = new SmartUnit(['B', 'KB', 1024], { useDecimal: true });
-const dec: Decimal = precise.parse('1KB');
+// t函数必须能接受所有TimeUnits单位，否则将导致类型错误
+const timeI18n = time.withConvert(t)
+// toBase的unit参数收到TimeUnits类型约束
+time.toBase(60, 'h')
 ```
 
 ## 贡献

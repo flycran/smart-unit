@@ -35,3 +35,7 @@ lerna-debug.log*
 !.vscode/tasks.json
 !.vscode/launch.json
 !.vscode/extensions.json
+
+# docs
+/docs/.vitepress/cache
+/docs/.vitepress/dist

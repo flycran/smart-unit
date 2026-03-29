@@ -1,5 +1,5 @@
-import { describe, expect, it } from 'vitest';
-import SmartUnit from '../src';
+import { describe, expect, it } from 'vitest'
+import SmartUnit from '../src'
 
 // 边界值测试
 describe('Edge case tests', () => {
@@ -8,7 +8,7 @@ describe('Edge case tests', () => {
   // 零值处理
   it('should handle zero value', () => {
     expect(su.format(0)).toEqual('0mm')
-    expect(su.getUnit(0)).toEqual({ num: 0, unit: 'mm' })
+    expect(su.getUnit(0)).toEqual({ num: 0, numStr: '0', unit: 'mm' })
   })
 
   // 极小值处理
@@ -35,7 +35,7 @@ describe('Edge case tests', () => {
   it('should handle negative values', () => {
     expect(su.format(-10)).toEqual('-1cm')
     expect(su.format(-1000)).toEqual('-1m')
-    expect(su.getUnit(-100)).toEqual({ num: -10, unit: 'cm' })
+    expect(su.getUnit(-100)).toEqual({ num: -10, numStr: '-10', unit: 'cm' })
   })
 })
 

@@ -1,19 +1,23 @@
 {
   "compilerOptions": {
     "module": "ESNext",
-    "moduleResolution": "node",
-    "declaration": true,
+    "moduleResolution": "bundler",
     "allowSyntheticDefaultImports": true,
     "sourceMap": false,
     "target": "es6",
+    "declaration": true,
     "declarationDir": "dist",
     "baseUrl": "./src",
     "skipLibCheck": true,
     "strictNullChecks": false,
     "noImplicitAny": false,
-    "forceConsistentCasingInFileNames": false,
+    "forceConsistentCasingInFileNames": false
   },
   "include": [
-    "src/**/*"
-  ]
+    "src/**/*",
+    "test/**/*",
+    "docs/.vitepress/**/*",
+    "vitest.config.ts",
+    "scripts/**/*"
+  ],
 }

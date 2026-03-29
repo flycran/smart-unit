@@ -1,5 +1,5 @@
-import { describe, expect, it } from 'vitest';
-import SmartUnit from '../src';
+import { describe, expect, it } from 'vitest'
+import SmartUnit from '../src'
 
 // 自定义进位测试 距离单位
 describe('Custom base conversion - distance units', () => {
@@ -74,6 +74,7 @@ describe('Decimal formatting tests', () => {
   it('getUnit', () => {
     expect(su.getUnit(1024 * 1024 * 1000)).toEqual({
       num: 1000,
+      numStr: '1000',
       unit: 'MB',
     })
   })
@@ -98,25 +99,52 @@ describe('Reverse conversion tests', () => {
   it('1km', () => {
     expect(su.toBase(1, 'km')).toEqual(1e6)
   })
+
+  // 负值输入测试
+  it('-1cm', () => {
+    expect(su.toBase(-1, 'cm')).toEqual(-10)
+  })
+  it('-10cm', () => {
+    expect(su.toBase(-10, 'cm')).toEqual(-100)
+  })
+  it('-1m', () => {
+    expect(su.toBase(-1, 'm')).toEqual(-1e3)
+  })
+  it('-10m', () => {
+    expect(su.toBase(-10, 'm')).toEqual(-1e4)
+  })
+  it('-1km', () => {
+    expect(su.toBase(-1, 'km')).toEqual(-1e6)
+  })
 })
 
 // 逆向测试 自动识别单位
 describe('Reverse conversion with auto unit detection', () => {
   const su = new SmartUnit(['mm', 10, 'cm', 100, 'm', 1e3, 'km'])
 
+  it('1mm', () => {
+    expect(su.parse('1mm')).toEqual(1)
+  })
   it('1cm', () => {
     expect(su.parse('1cm')).toEqual(10)
-  })
-  it('10cm', () => {
-    expect(su.parse('10cm')).toEqual(100)
   })
   it('1m', () => {
     expect(su.parse('1m')).toEqual(1e3)
   })
-  it('10m', () => {
-    expect(su.parse('10m')).toEqual(1e4)
-  })
   it('1km', () => {
     expect(su.parse('1km')).toEqual(1e6)
+  })
+
+  it('-1mm', () => {
+    expect(su.parse('-1mm')).toEqual(-1)
+  })
+  it('-1cm', () => {
+    expect(su.parse('-1cm')).toEqual(-10)
+  })
+  it('-1m', () => {
+    expect(su.parse('-1m')).toEqual(-1e3)
+  })
+  it('-1km', () => {
+    expect(su.parse('-1km')).toEqual(-1e6)
   })
 })

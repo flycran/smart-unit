@@ -1,17 +1,15 @@
 {
-  "name": "smart-unit-example",
-  "version": "1.0.0",
+  "name": "basic",
   "private": true,
-  "type": "module",
-  "scripts": {
-    "start": "tsx index.ts",
-    "start:i18n": "tsx i18n.ts"
-  },
-  "dependencies": {
-    "smart-unit": "latest"
-  },
+  "version": "1.0.0",
   "devDependencies": {
-    "tsx": "^4.21.0",
     "typescript": "^5.9.3"
+  },
+  "scripts": {
+    "start": "node --experimental-strip-types index.ts"
+  },
+  "type": "module",
+  "dependencies": {
+    "smart-unit": "../../smart-unit-latest.tgz"
   }
 }

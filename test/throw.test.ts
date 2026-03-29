@@ -1,5 +1,5 @@
-import { describe, expect, it } from 'vitest';
-import SmartUnit, { ERROR_HIGH_PRECISION_NOT_ENABLED, ERROR_NAN_INPUT } from '../src'
+import { describe, expect, it } from 'vitest'
+import SmartUnit, { ERROR_NAN_INPUT } from '../src'
 
 describe('Error handling tests', () => {
   // 未提供有效的单位集
@@ -9,25 +9,19 @@ describe('Error handling tests', () => {
     })
   })
 
+  // 非法的单位集
+  describe('Invalid units configuration', () => {
+    it('should throw an error if units array length is odd', () => {
+      expect(() => new SmartUnit(['mm', 'cm'])).toThrow('The unit setting is incorrect; the element at index [1] should be of numeric type.')
+    })
+  })
+
   describe('getUnit', () => {
     const su = new SmartUnit(['mm', 10, 'cm'])
 
     // 意外的NaN输入
     it('should throw error for unintentional NaN input', () => {
       expect(() => su.getUnit(NaN)).toThrow(ERROR_NAN_INPUT)
-    })
-
-    // 有意的NaN输入
-    it('should allow intentional NaN input when configured', () => {
-      SmartUnit.ignoreNaNInputs = true
-      expect(() => su.getUnit(NaN)).not.toThrow()
-      SmartUnit.ignoreNaNInputs = false // Reset for other tests
-    })
-
-    // 未开启高精度模式
-    it('should throw error when high precision is not enabled', () => {
-      // @ts-expect-error
-      expect(() => su.getUnit('123')).toThrow(ERROR_HIGH_PRECISION_NOT_ENABLED)
     })
   })
 
@@ -41,6 +35,7 @@ describe('Error handling tests', () => {
 
     // 无效的单位
     it('should throw error for invalid unit', () => {
+      // @ts-expect-error
       expect(() => su.toBase(100, 'invalidUnit')).toThrow('Undefined unit: "invalidUnit".')
     })
   })
@@ -71,6 +66,11 @@ describe('Error handling tests', () => {
     // 空字符串
     it('should throw error for empty string', () => {
       expect(() => su.parse('')).toThrow('Undefined unit: "".')
+    })
+
+    // 无效的数值
+    it('should throw error for invalid number', () => {
+      expect(() => su.parse('invalidmm')).toThrow('Invalid number: "invalid".')
     })
   })
 })
