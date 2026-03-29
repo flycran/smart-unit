@@ -3,13 +3,14 @@
   "setupTasks": [
     {
       "name": "Installing Dependencies",
-      "command": "bun install"
+      "command": "npx bun install"
     }
   ],
   "tasks": {
     "dev-server": {
       "name": "Start Dev Server",
       "command": "bun run dev",
+      "runAtStart": true,
       "preview": {
         "port": 5173
       }
