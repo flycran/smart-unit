@@ -12,18 +12,9 @@
     "strictNullChecks": false,
     "noImplicitAny": false,
     "forceConsistentCasingInFileNames": false,
-    "noEmit": true,
-    "outDir": "src"
+    "rootDir": "."
   },
   "include": [
-    "src/**/*"
-  ],
-  "references": [
-    {
-      "path": "./tsconfig.node.json"
-    },
-    {
-      "path": "./tsconfig.test.json"
-    }
+    "**/*.ts"
   ]
 }
